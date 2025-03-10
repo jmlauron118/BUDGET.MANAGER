@@ -25,7 +25,7 @@
 
     enableTooltip();
 
-    $('.sidebar-toggle').click(function () {
+    $('.sidebar-toggle').on('click', function () {
         if (!$('.sidebar-container').hasClass('open')) {
             openSidebar();
         } else {
@@ -33,11 +33,11 @@
         }
     });
 
-    $('.sidebar-overlay').click(function () {
+    $('.sidebar-overlay').on('click', function () {
         collapseSidebar();
     });
 
-    $('.sidebar-menu.sidebar-menu-dropdown').click(function () {
+    $('.sidebar-menu.sidebar-menu-dropdown').on('click', function () {
         $(this).toggleClass('active');
     });
 

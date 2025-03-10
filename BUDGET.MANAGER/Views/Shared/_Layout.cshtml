@@ -21,6 +21,12 @@
         </main>
     </div>
 
+    <section class="side-nav">
+        @{
+            await Html.RenderPartialAsync("~/Views/Partials/_SideBar.cshtml");
+        }
+    </section>
+
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - BUDGET.MANAGER - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

@@ -1,5 +1,6 @@
 ﻿@import '../base/colors';
 @import '../base/typography';
+@import '../base/sizes';
 
 header {
     margin-bottom: 70px;
@@ -21,12 +22,7 @@ nav.navbar {
 
     .proj-title {
         a {
-            color: $light-color;
-            text-decoration: none;
-
-            &:hover {
-                color: $semi-dark-color;
-            }
+            display: none;
         }
     }
 
@@ -44,16 +40,34 @@ nav.navbar {
         }
 
         a.dropdown-toggle {
-            position: relative; /* Absolute positioning makes it easier to control dimensions */
-            //top: 0;
-            //left: 0;
+            position: relative;
             width: 100%;
             height: 100%;
             color: inherit;
             text-decoration: none;
-            display: block; /* Block display ensures it fills the parent */
+            display: block;
             text-align: center;
-            line-height: 50px; /* Adjust to vertically center text */
+            line-height: 50px;
+        }
+
+        a.dropdown-item {
+            text-transform: none !important;
+        }
+    }
+}
+
+@media screen and (min-width: $bootstrap-breakpoint-md) {
+    nav.navbar {
+        .proj-title {
+            a {
+                color: $light-color;
+                text-decoration: none;
+                display: block;
+
+                &:hover {
+                    color: $semi-dark-color;
+                }
+            }
         }
     }
 }
