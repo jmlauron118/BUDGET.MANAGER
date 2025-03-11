@@ -5,19 +5,19 @@ namespace BUDGET.MANAGER.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<UserModel> UserModels { get; set; }
+        public DbSet<UserModel> Users { get; set; }
 
-        public DbSet<RoleModel> RoleModels { get; set; }
+        public DbSet<RoleModel> Roles{ get; set; }
 
-        public DbSet<UserRoleModel> UserRoleModels { get; set; }
+        public DbSet<UserRoleModel> UserRoles { get; set; }
 
-        public DbSet<ActionModel> ActionModels { get; set; }
+        public DbSet<ActionModel> Actions { get; set; }
 
-        public DbSet<ModuleModel> ModuleModels { get; set; }
+        public DbSet<ModuleModel> Modules { get; set; }
 
-        public DbSet<ModuleActionModel> ModuleActionModels { get; set; }
+        public DbSet<ModuleActionModel> ModuleActions { get; set; }
 
-        public DbSet<ModuleAccessModel> ModuleAccessModels { get; set; }
+        public DbSet<ModuleAccessModel> ModuleAccess { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
