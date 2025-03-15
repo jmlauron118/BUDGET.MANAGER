@@ -1,1 +1,55 @@
-﻿<h1>User Manager</h1>
+﻿<h4>@ViewData["Title"]</h4>
+
+<div id="usermanager" class="row pt-2">
+    <div class="col-md-3">
+        <div class="list-group">
+            <form asp-action="GetAllUsers" method="post">
+               @*  <a id="users-tab" href="#users" type="submit" class="list-group-item list-group-item-action active">
+                    <i class="fa fa-fw fa-user" aria-hidden="true"></i> &nbsp;Users
+                </a> *@
+                <button class="list-group-item list-group-item-action active" type="submit">Users</button>
+            </form>
+            <a id="module-tab" href="#module" class="list-group-item list-group-item-action">
+                <i class="fa fa-fw fa-puzzle-piece" aria-hidden="true"></i> &nbsp;Module
+            </a>
+            <a href="#action" class="list-group-item list-group-item-action">
+                <i class="fa fa-fw fa-bolt" aria-hidden="true"></i> &nbsp; Action
+            </a>
+            <a href="#module-action" class="list-group-item list-group-item-action">
+                <i class="fa fa-fw fa-cogs" aria-hidden="true"></i> &nbsp;Module Action
+            </a>
+            <a href="#user-role" class="list-group-item list-group-item-action">
+                <i class="fa fa-fw fa-book" aria-hidden="true"></i> &nbsp;User Role
+            </a>
+            <a href="#user-access" class="list-group-item list-group-item-action">
+                <i class="fa fa-fw fa-universal-access" aria-hidden="true"></i> &nbsp;User Access
+            </a>
+            <a href="#module-access" class="list-group-item list-group-item-action">
+                <i class="fa fa-fw fa-address-card" aria-hidden="true"></i> &nbsp;Module Access
+            </a>
+        </div>
+        <hr class="list-group-divider" />
+    </div>
+    <div class="col-md-9 form-container">
+        <div class="tab-content">
+            <!--Users-->
+            <div id="users" class="jumbotron tab-pane fade show active" role="tabpanel">
+                <div class="header">
+                    <h5>Users</h5>
+                    @* <button id="btnUserPageToggle" type="button" class="next-page-toggle ml-2 btn btn-primary btn-sm" data-button-id="#btnUserPageToggle" data-on="Add User" data-off="View Users">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add User
+                    </button> *@
+                    <button id="btnUserPageToggle" type="button" class="next-page-toggle ml-2 btn btn-primary btn-sm" data-button-id="#btnUserPageToggle" data-on="Add User" data-off="View Users">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add User
+                    </button>
+                    <hr />
+                </div>
+                @* @if(Model != null){ *@
+                @*     // await Html.RenderPartialAsync("./PartialViews/_Users.cshtml"); *@
+                @*     @Html.Raw(Model) *@
+                @* } *@
+                @Html.Raw(Model)
+            </div>
+        </div>
+    </div>
+</div>

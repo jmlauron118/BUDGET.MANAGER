@@ -1,5 +1,6 @@
 ﻿@import '../base/typography';
 @import '../base/colors';
+@import '../base/sizes';
 
 * {
     font-family: $main-font;
@@ -7,11 +8,21 @@
 
 html {
     font-size: 14px;
+    margin: 0;
+}
+
+.main-container {
+    padding: 0 40px;
+    margin-top: 5rem;
 }
 
 @media (min-width: 768px) {
     html {
         font-size: 16px;
+    }
+
+    .main-container {
+        padding: 0 75px;
     }
 }
 
@@ -31,4 +42,18 @@ body {
     font-size: 14px;
     background-color: $main-content-bg-color;
     margin-bottom: 60px;
+}
+
+/*Button*/
+
+.btn-primary {
+    color: $light-color !important;
+    background-color: $primary-color !important;
+    border-color:  $primary-color !important
+}
+
+.list-group-item.active {
+    color: $light-color !important;
+    background-color: $primary-color !important;
+    border-color: $primary-color !important
 }

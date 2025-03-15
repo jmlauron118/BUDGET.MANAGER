@@ -17,6 +17,12 @@ namespace BUDGET.MANAGER.Models.UserManager
         [Column(TypeName = "nvarchar(10)")]
         public string? Gender { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
+        public string? Username { get; set; }
+
+        [Column(TypeName = "nvarchar(50)")]
+        public string? Password { get; set; }
+
         public int IsActive { get; set; }
 
         public int CreateBy { get; set; }
