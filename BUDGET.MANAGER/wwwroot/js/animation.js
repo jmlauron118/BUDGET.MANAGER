@@ -63,9 +63,12 @@
         $(this).closest('.form-group').toggleClass('focused');
     });
 
-    $('.list-group .list-group-item').click(function () {
+    $('.list-group .list-group-item').on('click', function () {
         var tab = $('.tab-content').find('.tab-pane.show');
         var tabId = $(this).attr('href');
+
+        $('.list-group .list-group-item').removeClass("active");
+        $(this).addClass("active");
         tab.removeClass('show');
         setTimeout(function () {
             $('.tab-content').find('.tab-pane').removeClass('active');
@@ -76,25 +79,25 @@
         }, 200);
     });
 
-    $('.last-item').click(function () {
-        $('.sb-content a').remove();
-        $('.notif-item-content').remove();
+    //$('.last-item').click(function () {
+    //    $('.sb-content a').remove();
+    //    $('.notif-item-content').remove();
 
-        var id = GetCookie('UserRoleId');
-        GetAllSentNotification(id);
+    //    var id = GetCookie('UserRoleId');
+    //    GetAllSentNotification(id);
 
-        if (!$('.notif-container').hasClass('open')) {
-            $('.notif-container').animate({ width: '300px' });
-            $('.notif-container').addClass('open');
-            $('#txtSearchNotif').val('');
-            $($('.sb-content .dropdown-item')).css('display', '');
-        }
-    });
+    //    if (!$('.notif-container').hasClass('open')) {
+    //        $('.notif-container').animate({ width: '300px' });
+    //        $('.notif-container').addClass('open');
+    //        $('#txtSearchNotif').val('');
+    //        $($('.sb-content .dropdown-item')).css('display', '');
+    //    }
+    //});
 
-    $("body").mouseup(function (e) {
-        if (!$('.notif-container').is(e.target) && $('.notif-container').has(e.target).length === 0) {
-            $('.notif-container').animate({ width: '0px' });
-            $('.notif-container').removeClass('open');
-        }
-    });
+    //$("body").mouseup(function (e) {
+    //    if (!$('.notif-container').is(e.target) && $('.notif-container').has(e.target).length === 0) {
+    //        $('.notif-container').animate({ width: '0px' });
+    //        $('.notif-container').removeClass('open');
+    //    }
+    //});
 });

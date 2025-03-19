@@ -1,4 +1,6 @@
 using BUDGET.MANAGER.Data;
+using BUDGET.MANAGER.Services.Interfaces;
+using BUDGET.MANAGER.Services.UserManager.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 namespace BUDGET.MANAGER
@@ -15,6 +17,8 @@ namespace BUDGET.MANAGER
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnection"));
             });
+
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
@@ -36,6 +40,7 @@ namespace BUDGET.MANAGER
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+
 
             app.Run();
         }

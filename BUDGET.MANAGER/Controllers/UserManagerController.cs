@@ -1,65 +1,69 @@
-﻿using BUDGET.MANAGER.Data;
+﻿using BUDGET.MANAGER.Models;
+using BUDGET.MANAGER.Models.UserManager;
+using BUDGET.MANAGER.Models.UserManager.CombinedModel;
+using BUDGET.MANAGER.Services.Interfaces;
+using BUDGET.MANAGER.ViewModels.UserManager;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.EntityFrameworkCore;
 
 namespace BUDGET.MANAGER.Controllers
 {
     public class UserManagerController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly ICompositeViewEngine _viewEngine;
+        private readonly IUserService _userService;
 
-        public UserManagerController(AppDbContext context, ICompositeViewEngine viewEngine)
+        public UserManagerController(IUserService userService)
         {
-            _context = context;
-            _viewEngine = viewEngine;
-        }
-        public async Task<IActionResult> Index()
-        {
-            var users = await _context.Users.ToListAsync();
-
-            var userTableHtml = await RenderPartialViewToString("./PartialViews/_Users", users);
-
-            return View("Index", userTableHtml); // Pass the user table as the default content
+            _userService = userService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetAllUsers()
+        public IActionResult Index()
         {
-            var users = await _context.Users.ToListAsync();
-
-            if (users == null)
-            {
-                return View();
-            }
-            var userTableHtml = await RenderPartialViewToString("./PartialViews/_Users", users);
-
-            return View("Index", userTableHtml);
-        }
-
-        private async Task<string> RenderPartialViewToString(string viewName, object model)
-        {
-            ViewData.Model = model;
             ViewData["Title"] = "User Manager";
 
-            using (var writer = new StringWriter())
+            return View();
+        }
+
+        public async Task<IActionResult> LoadUsers()
+        {
+            var _response = new ResponseModel<List<UserModel>>();
+
+            _response = await _userService.GetAllUsers();
+
+            if (_response.Status == 2)
             {
-                var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
-
-                if (viewResult.View == null)
-                {
-                    throw new ArgumentNullException($"{viewName} does not match any available view");
-                }
-
-                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, writer, new HtmlHelperOptions());
-
-                await viewResult.View.RenderAsync(viewContext);
-
-                return writer.GetStringBuilder().ToString();
+                ModelState.AddModelError(string.Empty, _response.Message);
             }
+
+            var data = new CombineUserModel
+            {
+                Users = _response.Data,
+                UserValidation = new UserViewModel()
+            };
+
+            return PartialView("PartialViews/_Users", data);
+        }
+
+        public async Task<IActionResult> AddUser(UserModel user)
+        {
+            var _response = new ResponseModel<UserModel>();
+
+            if (ModelState.IsValid)
+            {
+                _response = await _userService.AddUser(user);
+
+                if (_response.Status == 2)
+                {
+                    ModelState.AddModelError(string.Empty, _response.Message);
+                }
+            }
+
+            var data = new CombineUserModel
+            {
+                Users = (IEnumerable<UserModel>)_response.Data,
+                UserValidation = new UserViewModel()
+            };
+
+            return PartialView("PartialViews/_Users", _response.Data);
         }
     }
 }
