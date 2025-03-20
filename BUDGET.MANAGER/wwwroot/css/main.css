@@ -401,7 +401,7 @@ html {
   }
 }
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #2b6777;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
@@ -717,7 +717,36 @@ body {
     padding-left: 0;
   }
 }
-.primary-background {
+.primary-background, .badge-success {
   background-color: #2b6777;
+  color: #ffffff;
+}
+
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.badge-pill {
+  padding-right: 0.6em;
+  padding-left: 0.6em;
+  border-radius: 10rem;
+}
+
+.badge-default {
+  background-color: #808080;
+  color: #ffffff;
+}
+
+.badge-danger {
+  background-color: #dd4545;
   color: #ffffff;
 }

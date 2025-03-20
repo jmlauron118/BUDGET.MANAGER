@@ -4,11 +4,16 @@ namespace BUDGET.MANAGER.ViewModels.UserManager
 {
     public class UserViewModel
     {
+        public int UserId { get; set; }
+
         [Required(ErrorMessage = "First name is required.")]
-        public string FirstName { get; set; }
+        public string Firstname { get; set; }
 
         [Required(ErrorMessage = "Last name is required.")]
-        public string LastName { get; set; }
+        public string Lastname { get; set; }
+
+        [Required(ErrorMessage = "Gender is required.")]
+        public string Gender { get; set; }
 
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; }
@@ -23,5 +28,15 @@ namespace BUDGET.MANAGER.ViewModels.UserManager
         [DataType(DataType.Password)]
         [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; }
+
+        public int IsActive { get; set; }
+
+        public int CreatedBy { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+        public int UpdatedBy { get; set; }
+
+        public DateTime DateUpdated { get; set; }
     }
 }

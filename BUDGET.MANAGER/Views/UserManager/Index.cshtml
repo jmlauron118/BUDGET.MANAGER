@@ -33,14 +33,12 @@
             <div id="users" class="jumbotron tab-pane fade show active" role="tabpanel">
                 <div class="header">
                     <h5>Users</h5>
-                    <button id="btnUserPageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#user-details">
+                    <button id="btnUserPageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalUserDetails">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add User
                     </button>
                     <hr />
                 </div>
-                <div id="users-table" class="inner-forms">
-                    
-                </div>
+                @await Html.PartialAsync("./PartialViews/_Users.cshtml")
             </div>
             <!--Module-->
             <div id="module" class="jumbotron tab-pane fade" role="tabpanel">

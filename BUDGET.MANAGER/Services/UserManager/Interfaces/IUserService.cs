@@ -5,10 +5,9 @@ namespace BUDGET.MANAGER.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ResponseModel<List<UserModel>>> GetAllUsers();
-        Task<ResponseModel<UserModel>> GetUserById(int userId);
-        Task<ResponseModel<UserModel>> AddUser(UserModel user);
-        Task<ResponseModel<UserModel>> UpdateUser(UserModel user);
-        Task<ResponseModel<UserModel>> DeleteUser(int userId);
+        Task<List<UserModel>> GetAllUsers();
+        Task<List<UserModel>> GetUserById(int userId);
+        Task<List<UserModel>> AddUser(UserModel user);
+        Task<List<UserModel>> ModifyUser(UserModel user);
     }
 }

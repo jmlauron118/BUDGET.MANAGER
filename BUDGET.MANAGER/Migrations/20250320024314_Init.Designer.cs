@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BUDGET.MANAGER.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250315111757_Init")]
+    [Migration("20250320024314_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<string>("ActionName")
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -51,7 +51,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<int>("IsActive")
                         .HasColumnType("int");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("ActionId");
@@ -67,7 +67,7 @@ namespace BUDGET.MANAGER.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModuleAccessId"));
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -79,7 +79,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<int>("ModuleActionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("UserRoleId")
@@ -101,7 +101,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<int>("ActionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -113,7 +113,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<int>("ModuleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("ModuleActionId");
@@ -129,7 +129,7 @@ namespace BUDGET.MANAGER.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModuleId"));
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -150,7 +150,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<string>("ModulePage")
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("ModuleId");
@@ -166,7 +166,7 @@ namespace BUDGET.MANAGER.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -184,7 +184,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("RoleId");
@@ -200,14 +200,14 @@ namespace BUDGET.MANAGER.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DateUpdated")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(50)");
@@ -224,7 +224,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -243,7 +243,7 @@ namespace BUDGET.MANAGER.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleId"));
 
-                    b.Property<int>("CreateBy")
+                    b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -255,7 +255,7 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UpdateBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")

@@ -2,7 +2,36 @@
 @import 'layout/all';
 @import 'modules/all';
 
-.primary-background {
+.primary-background, .badge-success {
     background-color: $primary-color;
+    color: $light-color;
+}
+
+.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.badge-pill {
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem
+}
+
+.badge-default {
+    background-color: $color-default;
+    color: $light-color;
+}
+
+.badge-danger {
+    background-color: $color-danger;
     color: $light-color;
 }

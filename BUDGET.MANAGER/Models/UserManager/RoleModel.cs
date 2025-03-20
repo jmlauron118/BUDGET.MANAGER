@@ -13,11 +13,11 @@ namespace BUDGET.MANAGER.Models.UserManager
 
         public int IsActive { get; set; }
 
-        public int CreateBy { get; set; }
+        public int CreatedBy { get; set; }
 
         public DateTime DateCreated { get; set; }
 
-        public int UpdateBy { get; set; }
+        public int UpdatedBy { get; set; }
 
         public DateTime DateUpdated { get; set; }
     }
