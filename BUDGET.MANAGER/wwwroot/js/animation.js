@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    $('.sidebar-menu[data-page-title="' + (document.title.replace(" - BUDGET.MANAGER", "")) + '"]').addClass('active');
+
     var enableTooltip = function () {
         $('.sidebar-menu, .sidebar-link, .sidebar-submenu').tooltip('enable');
     };
@@ -37,7 +39,7 @@
         collapseSidebar();
     });
 
-    $('.sidebar-menu.sidebar-menu-dropdown').on('click', function () {
+    $('.sidebar-menu').on('click', function () {
         $(this).toggleClass('active');
     });
 

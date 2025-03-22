@@ -34,7 +34,6 @@ function User() {
             var form = $("#userForm");
 
             if (!form.valid()) {
-                alert("Please fix the errors in the form.");
                 return;
             }
 
@@ -46,7 +45,6 @@ function User() {
                 Firstname: $("#Firstname").val(),
                 Lastname: $("#Lastname").val(),
                 Username: $("#Username").val(),
-                Password: $("#Password").val(),
                 Gender: $("#Gender").val(),
                 IsActive: isActive
             };
@@ -57,6 +55,7 @@ function User() {
                 _user.ModifyUser(userData);
             }
             else {
+                userData.Password = $("#Password").val();
                 _user.AddUser(userData);
             }
 
@@ -66,6 +65,11 @@ function User() {
         $("#modalUserDetails").off().on("hidden.bs.modal", function () {
             $("#userModalTitle").text("Add User");
             $("#btnSubmitUser").html('<i aria-hidden="true" class="fa fa-plus"></i> Add User');
+            $("#Password").prop("disabled", false);
+        });
+
+        $("#btnUserPageToggle").off().on("click", function () {
+            $("#btnClearUserForm").trigger("click");
         });
     }
 
@@ -116,7 +120,7 @@ function User() {
             });
         }
         else {
-            $row = `<tr class="text-center">
+            row = `<tr class="text-center">
                         <td colspan="4">No user data.</td>
                     </tr>`;
         }
@@ -136,7 +140,7 @@ function User() {
                 $("#Firstname").val(user.firstname);
                 $("#Lastname").val(user.lastname);
                 $("#Username").val(user.username);
-                $("#Password").val(user.password);
+                $("#Password").prop("disabled", true);
                 $("#Gender").val(user.gender);
                 $("#chkUserStatus").bootstrapSwitch("state", user.isActive == 1 ? true : false);
             }).catch((err) => {
