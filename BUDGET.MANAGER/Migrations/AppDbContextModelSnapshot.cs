@@ -84,6 +84,8 @@ namespace BUDGET.MANAGER.Migrations
 
                     b.HasKey("ModuleAccessId");
 
+                    b.HasAlternateKey("ModuleActionId", "UserRoleId");
+
                     b.ToTable("ModuleAccess");
                 });
 
@@ -115,6 +117,8 @@ namespace BUDGET.MANAGER.Migrations
 
                     b.HasKey("ModuleActionId");
 
+                    b.HasAlternateKey("ModuleId", "ActionId");
+
                     b.ToTable("ModuleActions");
                 });
 
@@ -138,6 +142,9 @@ namespace BUDGET.MANAGER.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("IsActive")
                         .HasColumnType("int");
 
@@ -146,6 +153,9 @@ namespace BUDGET.MANAGER.Migrations
 
                     b.Property<string>("ModulePage")
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("SortNo")
+                        .HasColumnType("int");
 
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
@@ -260,8 +270,7 @@ namespace BUDGET.MANAGER.Migrations
 
                     b.HasKey("UserRoleId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasAlternateKey("UserId", "RoleId");
 
                     b.ToTable("UserRoles");
                 });

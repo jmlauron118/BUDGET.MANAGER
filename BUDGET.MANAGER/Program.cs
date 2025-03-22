@@ -1,6 +1,7 @@
 using BUDGET.MANAGER.Data;
 using BUDGET.MANAGER.Services.Interfaces;
 using BUDGET.MANAGER.Services.UserManager.Implementations;
+using BUDGET.MANAGER.Services.UserManager.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BUDGET.MANAGER
@@ -15,10 +16,11 @@ namespace BUDGET.MANAGER
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("PCConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnection"));
             });
 
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IModuleService, ModuleService>();
 
             var app = builder.Build();
 

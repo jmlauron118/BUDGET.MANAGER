@@ -46,6 +46,7 @@ namespace BUDGET.MANAGER.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ModuleAccess", x => x.ModuleAccessId);
+                    table.UniqueConstraint("AK_ModuleAccess_ModuleActionId_UserRoleId", x => new { x.ModuleActionId, x.UserRoleId });
                 });
 
             migrationBuilder.CreateTable(
@@ -64,6 +65,7 @@ namespace BUDGET.MANAGER.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ModuleActions", x => x.ModuleActionId);
+                    table.UniqueConstraint("AK_ModuleActions_ModuleId_ActionId", x => new { x.ModuleId, x.ActionId });
                 });
 
             migrationBuilder.CreateTable(
@@ -75,7 +77,9 @@ namespace BUDGET.MANAGER.Migrations
                     ModuleName = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(150)", nullable: true),
                     ModulePage = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<int>(type: "int", nullable: false),
+                    SortNo = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
@@ -121,6 +125,7 @@ namespace BUDGET.MANAGER.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserRoles", x => x.UserRoleId);
+                    table.UniqueConstraint("AK_UserRoles_UserId_RoleId", x => new { x.UserId, x.RoleId });
                 });
 
             migrationBuilder.CreateTable(
@@ -144,12 +149,6 @@ namespace BUDGET.MANAGER.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_UserId",
-                table: "UserRoles",
-                column: "UserId",
-                unique: true);
         }
 
         /// <inheritdoc />

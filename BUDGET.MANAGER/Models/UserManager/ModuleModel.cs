@@ -17,7 +17,11 @@ namespace BUDGET.MANAGER.Models.UserManager
         [Column(TypeName = "nvarchar(50)")]
         public string? ModulePage { get; set; }
 
+        public string? Icon { get; set; }
+
         public int IsActive { get; set; }
+
+        public int SortNo { get; set; }
 
         public int CreatedBy { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using BUDGET.MANAGER.Data;
-using BUDGET.MANAGER.Models;
 using BUDGET.MANAGER.Models.UserManager;
 using BUDGET.MANAGER.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +64,6 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 _context.Entry(user).Property(u => u.UpdatedBy).IsModified = true;
                 _context.Entry(user).Property(u => u.DateUpdated).IsModified = true;
 
-                //_context.Users.Update(user);
                 await _context.SaveChangesAsync();
                 return await _context.Users.ToListAsync();
             }

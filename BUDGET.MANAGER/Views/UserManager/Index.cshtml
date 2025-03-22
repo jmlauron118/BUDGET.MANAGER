@@ -44,13 +44,12 @@
             <div id="module" class="jumbotron tab-pane fade" role="tabpanel">
                 <div class="header">
                     <h5>Modules</h5>
-                    <button id="btnModulePageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#module-details">
+                    <button id="btnModulePageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalModuleDetails">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add Module
                     </button>
                     <hr />
                 </div>
-                <div id="modules-table" class="inner-forms">
-                </div>
+                @await Html.PartialAsync("./PartialViews/_Modules.cshtml")
             </div>
         </div>
     </div>

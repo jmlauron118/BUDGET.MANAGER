@@ -2,9 +2,9 @@
 @import 'layout/all';
 @import 'modules/all';
 
-.primary-background, .badge-success {
-    background-color: $primary-color;
-    color: $light-color;
+.primary-background {
+    background-color: $primary-color !important;
+    color: $light-color !important;
 }
 
 .badge {
@@ -20,6 +20,11 @@
     border-radius: 10px;
 }
 
+.badge-success {
+    background-color: $color-success !important;
+    color: $light-color !important;
+}
+
 .badge-pill {
     padding-right: .6em;
     padding-left: .6em;
@@ -27,11 +32,20 @@
 }
 
 .badge-default {
-    background-color: $color-default;
-    color: $light-color;
+    background-color: $color-default !important;
+    color: $light-color !important;
+}
+
+.badge-warning {
+    background-color: $color-danger !important;
+    color: $light-color !important;
 }
 
 .badge-danger {
-    background-color: $color-danger;
-    color: $light-color;
+    background-color: $color-danger !important;
+    color: $light-color !important;
+}
+
+textarea{
+    resize: none;
 }

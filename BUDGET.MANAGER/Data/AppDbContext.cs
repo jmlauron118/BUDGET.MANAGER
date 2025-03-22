@@ -25,7 +25,9 @@ namespace BUDGET.MANAGER.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRoleModel>().HasIndex(e => new { e.UserId }).IsUnique();
+            modelBuilder.Entity<UserRoleModel>().HasAlternateKey(e => new { e.UserId, e.RoleId });
+            modelBuilder.Entity<ModuleActionModel>().HasAlternateKey(e => new { e.ModuleId, e.ActionId });
+            modelBuilder.Entity<ModuleAccessModel>().HasAlternateKey(e => new { e.ModuleActionId, e.UserRoleId });
 
             base.OnModelCreating(modelBuilder);
         }
