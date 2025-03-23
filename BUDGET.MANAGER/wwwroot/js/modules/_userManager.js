@@ -144,7 +144,7 @@ function User() {
                             </td>
                             <td>${user.gender}</td>
                             <td>${user.username}</td>
-                            <td><div class="user-status badge badge-pill ${user.isActive == 1 ? "badge-success" : "badge-danger"}">${user.isActive == 1 ? "Active" : "In Active"}</div></td>
+                            <td><div class="user-status badge badge-pill ${user.isActive == 1 ? "badge-success" : "badge-danger"}">${user.isActive == 1 ? "Active" : "Inactive"}</div></td>
                         </tr>
                     `;
 
@@ -304,7 +304,7 @@ function Module() {
                             <td>${module.description}</td>
                             <td><i class="${module.icon}"></i> | ${module.icon}</td>
                             <td>${module.sortNo}</td>
-                            <td><div class="module-status badge badge-pill ${module.isActive == 1 ? "badge-success" : "badge-danger"}">${module.isActive == 1 ? "Active" : "In Active"}</div></td>
+                            <td><div class="module-status badge badge-pill ${module.isActive == 1 ? "badge-success" : "badge-danger"}">${module.isActive == 1 ? "Active" : "Inactive"}</div></td>
                         </tr>
                     `;
 

@@ -84,6 +84,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                     _context.Modules.Remove(module);
                     await _context.SaveChangesAsync();
                 }
+
                 return await GetAllModules();
             }
             catch

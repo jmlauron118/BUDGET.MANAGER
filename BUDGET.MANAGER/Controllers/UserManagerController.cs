@@ -10,16 +10,19 @@ namespace BUDGET.MANAGER.Controllers
     {
         private readonly IUserService _userService;
         private readonly IModuleService _moduleService;
+        private readonly IActionService _actionService;
 
         /**
          * Constructor
          * @param userService - The user service
          */
         public UserManagerController(IUserService userService,
-                                     IModuleService moduleService)
+                                     IModuleService moduleService,
+                                     IActionService actionService)
         {
             _userService = userService;
             _moduleService = moduleService;
+            _actionService = actionService;
         }
 
         /**
@@ -177,6 +180,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Get all modules
+         *
+         * @param moduleId - The ID of the module to get
+         */
         [HttpPost]
         public async Task<IActionResult> GetAllModules()
         {
@@ -204,6 +212,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Get module by ID
+         *
+         * @param moduleId - The ID of the module to get
+         */
         [HttpPost]
         public async Task<IActionResult> GetModuleById(int moduleId)
         {
@@ -232,6 +245,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Add a new module
+         *
+         * @param module - The module to add
+         */
         [HttpPost]
         public async Task<IActionResult> AddModule(ModuleModel module)
         {
@@ -266,6 +284,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Modify an existing module
+         *
+         * @param module - The module to modify
+         */
         [HttpPost]
         public async Task<IActionResult> ModifyModule(ModuleModel module)
         {
@@ -298,6 +321,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Delete a module
+         *
+         * @param moduleId - The ID of the module to delete
+         */
         [HttpPost]
         public async Task<IActionResult> DeleteModule(int moduleId)
         {
@@ -322,6 +350,161 @@ namespace BUDGET.MANAGER.Controllers
                 _response.Status = 2;
                 _response.Message = ex.Message;
             }
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllActions()
+        {
+            var _response = new ResponseModel<List<ActionModel>>();
+            try
+            {
+                var actions = await _actionService.GetAllActions();
+
+                if (actions.Count > 0)
+                {
+                    _response.Data = actions;
+                    _response.Status = 1;
+                    _response.Message = "Actions loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No actions found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetActionById(int actionId)
+        {
+            var _response = new ResponseModel<List<ActionModel>>();
+            try
+            {
+                var action = await _actionService.GetActionById(actionId);
+
+                if (action.Count > 0)
+                {
+                    _response.Data = action;
+                    _response.Status = 1;
+                    _response.Message = "Action loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "Action does not exist.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAction(ActionModel action)
+        {
+            var _response = new ResponseModel<List<ActionModel>>();
+            try
+            {
+                //Temporary values since there are no authentication yet
+                action.CreatedBy = 1;
+                action.DateCreated = DateTime.Now;
+                action.UpdatedBy = 1;
+                action.DateUpdated = DateTime.Now;
+
+                var actions = await _actionService.AddAction(action);
+
+                if (actions.Count > 0)
+                {
+                    _response.Data = actions;
+                    _response.Status = 1;
+                    _response.Message = "Action added successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No actions found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModifyAction(ActionModel action)
+        {
+            var _response = new ResponseModel<List<ActionModel>>();
+            try
+            {
+                //Temporary values since there are no authentication yet
+                action.UpdatedBy = 1;
+                action.DateUpdated = DateTime.Now;
+
+                var actions = await _actionService.ModifyAction(action);
+
+                if (actions.Count > 0)
+                {
+                    _response.Data = actions;
+                    _response.Status = 1;
+                    _response.Message = "Action modified successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No actions found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAction(int actionId)
+        {
+            var _response = new ResponseModel<List<ActionModel>>();
+            try
+            {
+                var actions = await _actionService.DeleteAction(actionId);
+
+                if (actions.Count > 0)
+                {
+                    _response.Data = actions;
+                    _response.Status = 1;
+                    _response.Message = "Action deleted successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No actions found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
             return Json(_response);
         }
     }

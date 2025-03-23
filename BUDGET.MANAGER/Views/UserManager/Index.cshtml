@@ -51,6 +51,17 @@
                 </div>
                 @await Html.PartialAsync("./PartialViews/_Modules.cshtml")
             </div>
+            <!--Module-->
+            <div id="action" class="jumbotron tab-pane fade" role="tabpanel">
+                <div class="header">
+                    <h5>Actions</h5>
+                    <button id="btnActionPageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalActionDetails">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Action
+                    </button>
+                    <hr />
+                </div>
+                @await Html.PartialAsync("./PartialViews/_Actions.cshtml")
+            </div>
         </div>
     </div>
 </div>
