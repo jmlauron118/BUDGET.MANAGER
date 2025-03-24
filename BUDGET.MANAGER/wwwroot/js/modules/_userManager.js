@@ -6,10 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const user = new User();
     user.GetAllUsers();
     user.InitUser();
-
-    const module = new Module();
-    module.GetAllModules();
-    module.InitModule();
 });
 
 /**
@@ -28,9 +24,25 @@ function UserManager() {
         submenu.off().on("click", function (e) {
             e.preventDefault();
             const target = $(e.target);
+
             if (target.hasClass("list-group-item")) {
                 submenu.removeClass("active");
                 target.addClass("active");
+            }
+
+            switch (target[0].id) {
+                case "btnUsers":
+                    const user = new User();
+                    user.GetAllUsers();
+                    user.InitUser();
+                case "btnModules":
+                    const module = new Module();
+                    module.GetAllModules();
+                    module.InitModule();
+                case "btnActions":
+                    const action = new Action();
+                    action.GetAllAction();
+                    action.InitAction();
             }
         });
     }
@@ -231,7 +243,7 @@ function Module() {
                 var moduleData = {
                     ModuleName: $("#ModuleName").val(),
                     ModulePage: $("#ModulePage").val(),
-                    Description: $("#Description").val(),
+                    Description: $("#ModuleDescription").val(),
                     Icon: $("#Icon").val(),
                     SortNo: $("#txtSortNo").val(),
                     IsActive: isActive
@@ -297,7 +309,7 @@ function Module() {
                                 <span>${module.moduleName}</span><br/>
                                 <div class="nav-container">
                                     <a class="edit-module active" data-module-id="${module.moduleId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a>
-                                    <a class="remove-module active" data-module-id="${module.moduleId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
+                                    <a class="remove-module active text-red" data-module-id="${module.moduleId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
                                 </div>
                             </td>
                             <td>${module.modulePage}</td>
@@ -318,7 +330,7 @@ function Module() {
         }
 
         $(".edit-module").on("click", function () {
-            _module.GetModuleById($(this).data("module-id")).then(moduleData => {
+            _module.GetModuleById($(this).data("module-id")).then((moduleData) => {
                 var module = moduleData[0];
 
                 $("#modalModuleDetails").modal("show");
@@ -329,13 +341,21 @@ function Module() {
 
                 $("#ModuleName").val(module.moduleName);
                 $("#ModulePage").val(module.modulePage);
-                $("#Description").val(module.description);
+                $("#ModuleDescription").val(module.description);
                 $("#Icon").val(module.icon);
                 $("#txtSortNo").val(module.sortNo);
                 $("#chkModuleStatus").bootstrapSwitch("state", module.isActive == 1 ? true : false);
             }).catch((err) => {
                 Notif(`PopulateModule: ${err}`, "danger");
             });
+        });
+
+        $(".remove-module").on("click", function () {
+            var moduleId = $(this).data("module-id");
+
+            alertify.confirm("Are you sure you want to remove this module?", function (e) {
+                _module.RemoveModule(moduleId);
+            }).setHeader("Remove Module");
         });
     };
 
@@ -359,6 +379,162 @@ function Module() {
             else {
                 Notif(response.message, "success");
                 _module.PopulateModule(response.data);
+            }
+        });
+    }
+
+    this.RemoveModule = function (moduleId) {
+        $.post("/UserManager/RemoveModule", { moduleId: moduleId }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                _module.PopulateModule(response.data);
+            }
+        });
+    }
+}
+
+function Action() {
+    const _action = this;
+
+    this.InitAction = function () {
+        $("#btnSubmitAction").data("action", "add");
+        $("#btnSubmitAction").off().on("click", function () {
+            var form = $("#actionForm");
+
+            if (!form.valid()) {
+                return;
+            }
+
+            var action = $(this).data("action");
+
+            alertify.confirm(`Are you sure you want to ${action} this action?`, function (e) {
+                var isActive = $("#chkActionStatus").prop("checked") === true ? 1 : 0;
+
+                var actionData = {
+                    ActionName: $("#ActionName").val(),
+                    Description: $("#ActionDescription").val(),
+                    IsActive: isActive
+                };
+
+                if (action == "update") {
+                    actionData.ActionId = $("#btnSubmitAction").data("id");
+
+                    _action.ModifyAction(actionData);
+                }
+                else {
+                    _action.AddAction(actionData);
+                }
+
+                $("#modalActionDetails").modal("hide");
+            }).setHeader(`${CapitalizeWords(action)} action`);
+        });
+
+        $("#modalActionDetails").off().on("hidden.bs.modal", function () {
+            $("#actionModalTitle").text("Add Action");
+            $("#btnSubmitAction").html('<i aria-hidden="true" class="fa fa-plus"></i> Add Action');
+            $("#btnSubmitAction").data("action", "add");
+            $(this).find('.field-validation-error, .field-validation-valid').children().remove();
+        });
+
+        $("#btnActionPageToggle").off().on("click", function () {
+            $("#btnClearActionForm").trigger("click");
+        });
+    }
+
+    this.GetAllAction = function () {
+        $.post("/UserManager/GetAllActions", function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                _action.PopulateAction(response.data);
+            }
+        });
+    }
+
+    this.GetActionById = function (actionId) {
+        return new Promise((resolve, reject) => {
+            $.post("/UserManager/GetActionById", { actionId: actionId }, function (response) {
+                if (response.status === 2) {
+                    reject(response.message);
+                }
+                else {
+                    resolve(response.data);
+                }
+            });
+        });
+    }
+
+    this.PopulateAction = function (data) {
+        $("#action-table tbody").empty();
+
+        if (data != null) {
+            data.forEach(action => {
+                const row = `
+                        <tr>
+                            <td>
+                                <span>${action.actionName}</span><br/>
+                                <div class="nav-container">
+                                    <a class="edit-action active" data-action-id="${action.actionId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a>
+                                    <a class="remove-action active text-red" data-action-id="${action.actionId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
+                                </div>
+                            </td>
+                            <td>${action.description}</td>
+                            <td><div class="action-status badge badge-pill ${action.isActive == 1 ? "badge-success" : "badge-danger"}">${action.isActive == 1 ? "Active" : "Inactive"}</div></td>
+                        </tr>
+                    `;
+
+                $("#action-table tbody").append(row);
+            });
+        }
+        else {
+            $("#action-table tbody").append(`<tr class="text-center">
+                        <td colspan="6">No action data found.</td>
+                    </tr>`);
+        }
+
+        $(".edit-action").on("click", function () {
+            _action.GetActionById($(this).data("action-id")).then((actionData) => {
+                var action = actionData[0];
+
+                $("#modalActionDetails").modal("show");
+                $("#actionModalTitle").text("Update Action");
+                $("#btnSubmitAction").html('<i aria-hidden="true" class="fa fa-pencil"></i> Update Action');
+                $("#btnSubmitAction").data("action", "update");
+                $("#btnSubmitAction").data("id", $(this).data("action-id"));
+
+                $("#ActionName").val(action.actionName);
+                $("#ActionDescription").val(action.description);
+                $("#chkActionStatus").bootstrapSwitch("state", action.isActive == 1 ? true : false);
+            }).catch((err) => {
+                Notif(`PopulateAction: ${err}`, "danger");
+            });
+        });
+    }
+
+    this.AddAction = function (action) {
+        $.post("/UserManager/AddAction", { action: action }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                _action.PopulateAction(response.data);
+            }
+        });
+    }
+
+    this.ModifyAction = function (action) {
+        $.post("/UserManager/ModifyAction", { action: action }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                _action.PopulateAction(response.data);
             }
         });
     }

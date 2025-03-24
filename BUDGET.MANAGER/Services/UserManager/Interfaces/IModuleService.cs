@@ -8,6 +8,6 @@ namespace BUDGET.MANAGER.Services.UserManager.Interfaces
         Task<List<ModuleModel>> GetModuleById(int moduleId);
         Task<List<ModuleModel>> AddModule(ModuleModel module);
         Task<List<ModuleModel>> ModifyModule(ModuleModel module);
-        Task<List<ModuleModel>> DeleteModule(int moduleId);
+        Task<List<ModuleModel>> RemoveModule(int moduleId);
     }
 }

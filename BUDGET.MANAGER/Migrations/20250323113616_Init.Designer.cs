@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BUDGET.MANAGER.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250322103141_Init")]
+    [Migration("20250323113616_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -34,6 +34,7 @@ namespace BUDGET.MANAGER.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActionId"));
 
                     b.Property<string>("ActionName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("CreatedBy")
@@ -55,6 +56,8 @@ namespace BUDGET.MANAGER.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ActionId");
+
+                    b.HasAlternateKey("ActionName");
 
                     b.ToTable("Actions");
                 });

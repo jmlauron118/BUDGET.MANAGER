@@ -71,7 +71,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             }
         }
 
-        public async Task<List<ActionModel>> DeleteAction(int actionId)
+        public async Task<List<ActionModel>> RemoveAction(int actionId)
         {
             try
             {

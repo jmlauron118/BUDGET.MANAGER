@@ -327,23 +327,14 @@ namespace BUDGET.MANAGER.Controllers
          * @param moduleId - The ID of the module to delete
          */
         [HttpPost]
-        public async Task<IActionResult> DeleteModule(int moduleId)
+        public async Task<IActionResult> RemoveModule(int moduleId)
         {
             var _response = new ResponseModel<List<ModuleModel>>();
             try
-            {
-                var modules = await _moduleService.DeleteModule(moduleId);
-                if (modules.Count > 0)
-                {
-                    _response.Data = modules;
-                    _response.Status = 1;
-                    _response.Message = "Module deleted successfully.";
-                }
-                else
-                {
-                    _response.Status = 0;
-                    _response.Message = "No modules found.";
-                }
+            {                
+                _response.Data = await _moduleService.RemoveModule(moduleId);
+                _response.Status = 1;
+                _response.Message = "Module deleted successfully.";
             }
             catch (Exception ex)
             {
@@ -386,6 +377,7 @@ namespace BUDGET.MANAGER.Controllers
         public async Task<IActionResult> GetActionById(int actionId)
         {
             var _response = new ResponseModel<List<ActionModel>>();
+
             try
             {
                 var action = await _actionService.GetActionById(actionId);
@@ -480,24 +472,14 @@ namespace BUDGET.MANAGER.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteAction(int actionId)
+        public async Task<IActionResult> RemoveAction(int actionId)
         {
             var _response = new ResponseModel<List<ActionModel>>();
             try
             {
-                var actions = await _actionService.DeleteAction(actionId);
-
-                if (actions.Count > 0)
-                {
-                    _response.Data = actions;
-                    _response.Status = 1;
-                    _response.Message = "Action deleted successfully.";
-                }
-                else
-                {
-                    _response.Status = 0;
-                    _response.Message = "No actions found.";
-                }
+                _response.Data = await _actionService.RemoveAction(actionId);
+                _response.Status = 1;
+                _response.Message = "Action deleted successfully.";
             }
             catch (Exception ex)
             {

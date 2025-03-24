@@ -49,3 +49,11 @@
 textarea{
     resize: none;
 }
+
+.text-red {
+    color: $color-danger;
+
+    &:hover {
+        color: $hover-danger !important;
+    }
+}

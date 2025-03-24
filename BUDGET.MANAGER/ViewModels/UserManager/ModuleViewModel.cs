@@ -8,7 +8,7 @@ namespace BUDGET.MANAGER.ViewModels.UserManager
         public string ModuleName { get; set; }
 
         [Required(ErrorMessage = "Module Description is required.")]
-        public string Description { get; set; }
+        public string ModuleDescription { get; set; }
 
         [Required(ErrorMessage = "Module Page is required.")]
         public string ModulePage { get; set; }

@@ -244,7 +244,7 @@ nav.navbar .nav-container-right {
   padding: 0 1rem;
 }
 nav.navbar .nav-container-right:hover {
-  background-color: #245764;
+  background-color: rgb(36.2314814815, 86.787037037, 100.2685185185);
 }
 nav.navbar .nav-container-right a.dropdown-toggle {
   position: relative;
@@ -506,7 +506,7 @@ body {
   background-color: #edf0f2;
 }
 .sidebar-container .sidebar .sidebar-menu-list .sidebar-menu.sidebar-menu-dropdown.active {
-  background-color: #e9ecef;
+  background-color: rgb(232.5580645161, 236.2983870968, 238.7919354839);
 }
 .sidebar-container .sidebar .sidebar-menu-list .sidebar-submenu-list .sidebar-submenu {
   padding: 0.5rem 1rem;
@@ -763,4 +763,11 @@ body {
 
 textarea {
   resize: none;
+}
+
+.text-red {
+  color: #dd4545;
+}
+.text-red:hover {
+  color: #c73535 !important;
 }

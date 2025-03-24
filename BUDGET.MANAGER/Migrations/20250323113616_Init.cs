@@ -17,7 +17,7 @@ namespace BUDGET.MANAGER.Migrations
                 {
                     ActionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ActionName = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    ActionName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(150)", nullable: true),
                     IsActive = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -28,6 +28,7 @@ namespace BUDGET.MANAGER.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Actions", x => x.ActionId);
+                    table.UniqueConstraint("AK_Actions_ActionName", x => x.ActionName);
                 });
 
             migrationBuilder.CreateTable(

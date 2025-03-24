@@ -73,7 +73,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             }
         }
 
-        public async Task<List<ModuleModel>> DeleteModule(int moduleId)
+        public async Task<List<ModuleModel>> RemoveModule(int moduleId)
         {
             try
             {
