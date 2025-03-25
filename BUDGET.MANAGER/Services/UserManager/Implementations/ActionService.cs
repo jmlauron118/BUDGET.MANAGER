@@ -56,13 +56,27 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
-                _context.Entry(action).Property(u => u.ActionName).IsModified = true;
-                _context.Entry(action).Property(u => u.Description).IsModified = true;
-                _context.Entry(action).Property(u => u.IsActive).IsModified = true;
-                _context.Entry(action).Property(u => u.UpdatedBy).IsModified = true;
-                _context.Entry(action).Property(u => u.DateUpdated).IsModified = true;
+                var actionResp = await _context.Actions.FirstOrDefaultAsync(e => e.ActionId == action.ActionId);
 
-                await _context.SaveChangesAsync();
+                if (actionResp != null)
+                {
+                    _context.Entry(actionResp).State = EntityState.Detached;
+
+                    actionResp.ActionName = action.ActionName;
+                    actionResp.Description = action.Description;
+                    actionResp.IsActive = action.IsActive;
+                    actionResp.UpdatedBy = action.UpdatedBy;
+                    actionResp.DateUpdated = action.DateUpdated;
+
+                    //_context.Entry(actionResp).Property(u => u.Description).IsModified = true;
+                    //_context.Entry(actionResp).Property(u => u.IsActive).IsModified = true;
+                    //_context.Entry(actionResp).Property(u => u.UpdatedBy).IsModified = true;
+                    //_context.Entry(actionResp).Property(u => u.DateUpdated).IsModified = true;
+
+                    _context.Update(actionResp);
+                    await _context.SaveChangesAsync();
+                }
+
                 return await _context.Actions.ToListAsync();
             }
             catch

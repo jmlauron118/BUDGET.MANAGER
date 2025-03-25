@@ -432,7 +432,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);
             }
 
             return Json(_response);
