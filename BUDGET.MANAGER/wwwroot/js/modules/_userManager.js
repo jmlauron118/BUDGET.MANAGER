@@ -41,8 +41,12 @@ function UserManager() {
                     module.InitModule();
                 case "btnActions":
                     const action = new Action();
-                    action.GetAllAction();
+                    action.GetAllActions();
                     action.InitAction();
+                case "btnModuleActions":
+                    const moduleAction = new ModuleAction();
+                    moduleAction.GetAllModuleActions();
+                    moduleAction.InitModuleAction();
             }
         });
     }
@@ -444,7 +448,7 @@ function Action() {
         });
     }
 
-    this.GetAllAction = function () {
+    this.GetAllActions = function () {
         $.post("/UserManager/GetAllActions", function (response) {
             if (response.status === 2) {
                 Notif(response.message, "danger");
@@ -479,7 +483,6 @@ function Action() {
                                 <span>${action.actionName}</span><br/>
                                 <div class="nav-container">
                                     <a class="edit-action active" data-action-id="${action.actionId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a>
-                                    <a class="remove-action active text-red" data-action-id="${action.actionId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
                                 </div>
                             </td>
                             <td>${action.description}</td>
@@ -537,5 +540,53 @@ function Action() {
                 _action.PopulateAction(response.data);
             }
         });
+    }
+}
+
+function ModuleAction() {
+    const _moduleAction = this;
+
+    this.InitModuleAction = function () {
+
+    }
+
+    this.GetAllModuleActions = function () {
+        $.post("/UserManager/GetAllModuleActions", function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                _moduleAction.PopulateModuleAction(response.data);
+            }
+        });
+    }
+
+    this.PopulateModuleAction = function (data) {
+        $("#module-action-table tbody").empty();
+
+        if (data != null) {
+            data.forEach(moduleAction => {
+                const row = `
+                        <tr>
+                            <td>
+                                <span>${moduleAction.moduleName}</span><br/>
+                                <div class="nav-container">
+                                    <a class="edit-module-action active" data-module-action-id="${moduleAction.moduleActionId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a>
+                                </div>
+                            </td>
+                            <td>${moduleAction.moduleDescription}</td>
+                            <td>${moduleAction.actionName}</td>
+                            <td>${moduleAction.actionDescription}</td>
+                        </tr>
+                    `;
+
+                $("#module-action-table tbody").append(row);
+            });
+        }
+        else {
+            $("#module-action-table tbody").append(`<tr class="text-center">
+                        <td colspan="6">No module action data found.</td>
+                    </tr>`);
+        }
     }
 }

@@ -8,6 +8,5 @@ namespace BUDGET.MANAGER.Services.UserManager.Interfaces
         Task<List<ActionModel>> GetActionById(int actionId);
         Task<List<ActionModel>> AddAction(ActionModel action);
         Task<List<ActionModel>> ModifyAction(ActionModel action);
-        Task<List<ActionModel>> RemoveAction(int actionId);
     }
 }

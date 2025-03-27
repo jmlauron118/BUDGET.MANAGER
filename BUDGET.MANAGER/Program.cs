@@ -22,6 +22,7 @@ namespace BUDGET.MANAGER
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IModuleService, ModuleService>();
             builder.Services.AddScoped<IActionService, ActionService>();
+            builder.Services.AddScoped<IModuleActionService, ModuleActionService>();
 
             var app = builder.Build();
 

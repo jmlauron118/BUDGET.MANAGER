@@ -44,6 +44,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             {
                 _context.Actions.Add(action);
                 await _context.SaveChangesAsync();
+
                 return await _context.Actions.ToListAsync();
             }
             catch
@@ -68,32 +69,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                     actionResp.UpdatedBy = action.UpdatedBy;
                     actionResp.DateUpdated = action.DateUpdated;
 
-                    //_context.Entry(actionResp).Property(u => u.Description).IsModified = true;
-                    //_context.Entry(actionResp).Property(u => u.IsActive).IsModified = true;
-                    //_context.Entry(actionResp).Property(u => u.UpdatedBy).IsModified = true;
-                    //_context.Entry(actionResp).Property(u => u.DateUpdated).IsModified = true;
-
                     _context.Update(actionResp);
-                    await _context.SaveChangesAsync();
-                }
-
-                return await _context.Actions.ToListAsync();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public async Task<List<ActionModel>> RemoveAction(int actionId)
-        {
-            try
-            {
-                var action = await _context.Actions.FindAsync(actionId);
-
-                if (action != null)
-                {
-                    _context.Actions.Remove(action);
                     await _context.SaveChangesAsync();
                 }
 

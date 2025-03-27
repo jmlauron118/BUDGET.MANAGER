@@ -6,16 +6,23 @@
         {
             string returnValue = string.Empty;
 
-            if (ex.InnerException.Message.ToLower().Contains("unique key constraint"))
+            if (ex.InnerException.Message == null)
             {
-                returnValue = "Record already existed.";
+                returnValue = ex.Message;
             }
             else
             {
-                returnValue = ex.InnerException.Message;
+                if (ex.InnerException.Message.ToLower().Contains("unique key constraint"))
+                {
+                    returnValue = "Record already existed.";
+                }
+                else
+                {
+                    returnValue = ex.InnerException.Message;
+                }
             }
 
-            return returnValue;
+                return returnValue;
         }
     }
 }

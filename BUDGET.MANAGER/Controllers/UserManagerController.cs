@@ -6,23 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BUDGET.MANAGER.Controllers
 {
+    /**
+     * The user manager controller
+     */
     public class UserManagerController : Controller
     {
+        // The user service
         private readonly IUserService _userService;
+        // The module service
         private readonly IModuleService _moduleService;
+        // The action service
         private readonly IActionService _actionService;
+        // The module action service
+        private readonly IModuleActionService _moduleActionService;
 
         /**
          * Constructor
          * @param userService - The user service
+         * @param moduleService - The module service
+         * @param actionService - The action service
+         * @param moduleActionService - The module action service
          */
         public UserManagerController(IUserService userService,
                                      IModuleService moduleService,
-                                     IActionService actionService)
+                                     IActionService actionService,
+                                     IModuleActionService moduleActionService)
         {
             _userService = userService;
             _moduleService = moduleService;
             _actionService = actionService;
+            _moduleActionService = moduleActionService;
         }
 
         /**
@@ -62,7 +75,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
@@ -96,7 +109,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
@@ -136,7 +149,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
@@ -174,7 +187,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
@@ -207,7 +220,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
             return Json(_response);
         }
@@ -240,7 +253,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
             return Json(_response);
         }
@@ -279,7 +292,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
             return Json(_response);
         }
@@ -316,7 +329,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
             return Json(_response);
         }
@@ -339,11 +352,14 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
             return Json(_response);
         }
 
+        /**
+         * Get all actions
+         */
         [HttpPost]
         public async Task<IActionResult> GetAllActions()
         {
@@ -367,12 +383,17 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
         }
 
+        /**
+         * Get action by ID
+         *
+         * @param actionId - The ID of the action to get
+         */
         [HttpPost]
         public async Task<IActionResult> GetActionById(int actionId)
         {
@@ -397,12 +418,17 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
         }
 
+        /**
+         * Add a new action
+         *
+         * @param action - The action to add
+         */
         [HttpPost]
         public async Task<IActionResult> AddAction(ActionModel action)
         {
@@ -438,6 +464,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Modify an existing action
+         *
+         * @param action - The action to modify
+         */
         [HttpPost]
         public async Task<IActionResult> ModifyAction(ActionModel action)
         {
@@ -465,26 +496,155 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);;
             }
 
             return Json(_response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveAction(int actionId)
+        public async Task<IActionResult> GetAllModuleActions()
         {
-            var _response = new ResponseModel<List<ActionModel>>();
+            var _response = new ResponseModel<List<object>>();
+
             try
             {
-                _response.Data = await _actionService.RemoveAction(actionId);
-                _response.Status = 1;
-                _response.Message = "Action deleted successfully.";
+                var moduleActions = await _moduleActionService.GetAllModuleActions();
+
+                if (moduleActions.Count > 0)
+                {
+                    _response.Data = moduleActions;
+                    _response.Status = 1;
+                    _response.Message = "Module Actions loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No Module Actions found.";
+                }
             }
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ex.Message;
+                _response.Message = ErrorValidation.ErrorMsg(ex);
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetModuleActionById(int moduleActionId)
+        {
+            var _response = new ResponseModel<List<ModuleActionModel>>();
+
+            try
+            {
+                var moduleAction = await _moduleActionService.GetModuleActionById(moduleActionId);
+
+                if (moduleAction.Count > 0)
+                {
+                    _response.Data = moduleAction;
+                    _response.Status = 1;
+                    _response.Message = "Module Action loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "Module Action does not exist.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddModuleAction(ModuleActionModel moduleAction)
+        {
+            var _response = new ResponseModel<List<ModuleActionModel>>();
+
+            try
+            {
+                //Temporary values since there are no authentication yet
+                moduleAction.CreatedBy = 1;
+                moduleAction.DateCreated = DateTime.Now;
+                moduleAction.UpdatedBy = 1;
+                moduleAction.DateUpdated = DateTime.Now;
+
+                var moduleActions = await _moduleActionService.AddModuleAction(moduleAction);
+
+                if (moduleActions.Count > 0)
+                {
+                    _response.Data = moduleActions;
+                    _response.Status = 1;
+                    _response.Message = "Module Action added successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No Module Actions found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModifyModuleAction(ModuleActionModel moduleAction)
+        {
+            var _response = new ResponseModel<List<ModuleActionModel>>();
+            try
+            {
+                //Temporary values since there are no authentication yet
+                moduleAction.UpdatedBy = 1;
+                moduleAction.DateUpdated = DateTime.Now;
+
+                var moduleActions = await _moduleActionService.ModifyModuleAction(moduleAction);
+
+                if (moduleActions.Count > 0)
+                {
+                    _response.Data = moduleActions;
+                    _response.Status = 1;
+                    _response.Message = "Module Action modified successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No Module Actions found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+            }
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveModuleAction(int moduleActionId)
+        {
+            var _response = new ResponseModel<List<ModuleActionModel>>();
+
+            try
+            {
+                _response.Data = await _moduleActionService.RemoveModuleAction(moduleActionId);
+                _response.Status = 1;
+                _response.Message = "Module Action deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ErrorValidation.ErrorMsg(ex); ;
             }
 
             return Json(_response);

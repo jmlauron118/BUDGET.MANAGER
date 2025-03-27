@@ -12,7 +12,7 @@
             <a id="btnActions" href="#action" class="list-group-item list-group-item-action">
                 <i class="fa fa-fw fa-bolt" aria-hidden="true"></i> &nbsp; Action
             </a>
-            <a href="#btnModuleActions" class="list-group-item list-group-item-action">
+            <a id="btnModuleActions" href="#module-action" class="list-group-item list-group-item-action">
                 <i class="fa fa-fw fa-cogs" aria-hidden="true"></i> &nbsp;Module Action
             </a>
             <a id="btnUserRoles" href="#user-role" class="list-group-item list-group-item-action">
@@ -51,7 +51,7 @@
                 </div>
                 @await Html.PartialAsync("./PartialViews/_Modules.cshtml")
             </div>
-            <!--Module-->
+            <!--Action-->
             <div id="action" class="jumbotron tab-pane fade" role="tabpanel">
                 <div class="header">
                     <h5>Actions</h5>
@@ -61,6 +61,17 @@
                     <hr />
                 </div>
                 @await Html.PartialAsync("./PartialViews/_Actions.cshtml")
+            </div>
+            <!--Module Action-->
+            <div id="module-action" class="jumbotron tab-pane fade" role="tabpanel">
+                <div class="header">
+                    <h5>Module Actions</h5>
+                    <button id="btnModuleActionPageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalModuleActionDetails">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Module Action
+                    </button>
+                    <hr />
+                </div>
+                @await Html.PartialAsync("./PartialViews/_ModuleActions.cshtml")
             </div>
         </div>
     </div>

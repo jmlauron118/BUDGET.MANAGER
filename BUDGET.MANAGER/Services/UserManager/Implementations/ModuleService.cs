@@ -44,6 +44,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             {
                 _context.Modules.Add(module);
                 await _context.SaveChangesAsync();
+
                 return await GetAllModules();
             }
             catch
@@ -65,6 +66,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 _context.Entry(module).Property(u => u.DateUpdated).IsModified = true;
 
                 await _context.SaveChangesAsync();
+
                 return await GetAllModules();
             }
             catch
@@ -83,6 +85,10 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 {
                     _context.Modules.Remove(module);
                     await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Module not found.");
                 }
 
                 return await GetAllModules();
