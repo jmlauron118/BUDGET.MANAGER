@@ -466,29 +466,6 @@ namespace BUDGET.MANAGER.Controllers
         }
 
         /**
-         * Delete a module
-         *
-         * @param moduleId - The ID of the module to delete
-         */
-        [HttpPost]
-        public async Task<IActionResult> RemoveModule(int moduleId)
-        {
-            var _response = new ResponseModel<List<ModuleModel>>();
-            try
-            {                
-                _response.Data = await _moduleService.RemoveModule(moduleId);
-                _response.Status = 1;
-                _response.Message = "Module deleted successfully.";
-            }
-            catch (Exception ex)
-            {
-                _response.Status = 2;
-                _response.Message = ex.Message;
-            }
-            return Json(_response);
-        }
-
-        /**
          * Get all actions
          */
         [HttpPost]

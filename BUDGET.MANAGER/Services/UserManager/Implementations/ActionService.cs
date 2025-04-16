@@ -42,6 +42,13 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
+                var existingAction = await _context.Actions.FirstOrDefaultAsync(a => a.ActionName == action.ActionName);
+
+                if (existingAction != null)
+                {
+                    throw new Exception("Action already exist.");
+                }
+
                 _context.Actions.Add(action);
                 await _context.SaveChangesAsync();
 
@@ -55,44 +62,28 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
 
         public async Task<List<ActionModel>> ModifyAction(ActionModel action)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            try
             {
-                try
+                var existingAction = await _context.Actions.FirstOrDefaultAsync(a => a.ActionName == action.ActionName && a.ActionId != action.ActionId);
+
+                if (existingAction != null)
                 {
-                    var actionResp = await _context.Actions.FirstOrDefaultAsync(a => a.ActionId == action.ActionId);
-
-                    if (actionResp != null)
-                    {
-                        _context.Actions.Remove(actionResp);
-                        await _context.SaveChangesAsync();
-
-                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actions ON");
-
-                        var updatedAction = new ActionModel
-                        {
-                            ActionId = action.ActionId,
-                            ActionName = action.ActionName,
-                            Description = action.Description,
-                            IsActive = action.IsActive,
-                            CreatedBy = actionResp.CreatedBy,
-                            DateCreated = actionResp.DateCreated,
-                            UpdatedBy = action.UpdatedBy,
-                            DateUpdated = action.DateUpdated
-                        };
-
-                        _context.Actions.Add(updatedAction);
-                        await _context.SaveChangesAsync();
-                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actions OFF");
-                        await transaction.CommitAsync();
-                    }
-
-                    return await GetAllActions(2);
+                    throw new Exception("Action already exist.");
                 }
-                catch
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+
+                _context.Entry(action).Property(a => a.ActionName).IsModified = true;
+                _context.Entry(action).Property(a => a.Description).IsModified = true;
+                _context.Entry(action).Property(a => a.IsActive).IsModified = true;
+                _context.Entry(action).Property(a => a.UpdatedBy).IsModified = true;
+                _context.Entry(action).Property(a => a.DateUpdated).IsModified = true;
+
+                await _context.SaveChangesAsync();
+
+                return await GetAllActions(2);
+            }
+            catch
+            {
+                throw;
             }
         }
     }

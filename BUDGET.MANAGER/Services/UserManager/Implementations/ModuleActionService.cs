@@ -57,6 +57,13 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
+                var existingModuleAction = await _context.ModuleActions.FirstOrDefaultAsync(ma => ma.ModuleId == moduleAction.ModuleId && ma.ActionId == moduleAction.ActionId);
+
+                if (existingModuleAction != null)
+                {
+                    throw new Exception("Module Action already exists.");
+                }
+
                 _context.ModuleActions.Add(moduleAction);
                 await _context.SaveChangesAsync();
 
@@ -70,42 +77,27 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
 
         public async Task<List<object>> ModifyModuleAction(ModuleActionModel moduleAction)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            try
             {
-                try
+                var existingModuleAction = await _context.ModuleActions.FirstOrDefaultAsync(ma => ma.ModuleId == moduleAction.ModuleId && ma.ActionId == moduleAction.ActionId && ma.ModuleActionId != moduleAction.ModuleActionId);
+
+                if (existingModuleAction != null)
                 {
-                    var moduleActionResp = await _context.ModuleActions.FirstOrDefaultAsync(e => e.ModuleActionId == moduleAction.ModuleActionId);
-
-                    if (moduleActionResp != null)
-                    {
-                        _context.ModuleActions.Remove(moduleActionResp);
-                        await _context.SaveChangesAsync();
-
-                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT ModuleActions ON");
-
-                        var updatedModuleAction = new ModuleActionModel{
-                            ModuleActionId = moduleAction.ModuleActionId,
-                            ModuleId = moduleAction.ModuleId,
-                            ActionId = moduleAction.ActionId,
-                            CreatedBy = moduleActionResp.CreatedBy,
-                            DateCreated = moduleActionResp.DateCreated,
-                            UpdatedBy = moduleAction.UpdatedBy,
-                            DateUpdated = moduleAction.DateUpdated
-                        };
-
-                        _context.ModuleActions.Add(updatedModuleAction);
-                        await _context.SaveChangesAsync();
-                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT ModuleActions OFF");
-                        await transaction.CommitAsync();
-                    }
-
-                    return await GetAllModuleActions();
+                    throw new Exception("Module Action already exists.");
                 }
-                catch
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+
+                _context.Entry(moduleAction).Property(ma => ma.ModuleId).IsModified = true;
+                _context.Entry(moduleAction).Property(ma => ma.ActionId).IsModified = true;
+                _context.Entry(moduleAction).Property(ma => ma.UpdatedBy).IsModified = true;
+                _context.Entry(moduleAction).Property(ma => ma.DateUpdated).IsModified = true;
+
+                await _context.SaveChangesAsync();
+
+                return await GetAllModuleActions();
+            }
+            catch
+            {
+                throw;
             }
         }
 
@@ -117,12 +109,20 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
 
                 if (moduleActionResp != null)
                 {
+                    var moduleAccess = await _context.ModuleAccess.FirstOrDefaultAsync(e => e.ModuleActionId == moduleActionId);
+
+                    if (moduleAccess != null)
+                    {
+                        _context.ModuleAccess.Remove(moduleAccess);
+                        await _context.SaveChangesAsync();
+                    }
+
                     _context.ModuleActions.Remove(moduleActionResp);
                     await _context.SaveChangesAsync();
                 }
                 else
                 {
-                    throw new Exception("ModuleAction not found");
+                    throw new Exception("Module Action not found");
                 }
 
                 return await GetAllModuleActions();

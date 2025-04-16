@@ -42,6 +42,13 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
+                var existingModule = await _context.Modules.FirstOrDefaultAsync(m => m.ModuleName == module.ModuleName || m.ModulePage == module.ModulePage);
+
+                if (existingModule != null)
+                {
+                    throw new Exception("Module already exists.");
+                }
+
                 _context.Modules.Add(module);
                 await _context.SaveChangesAsync();
 
@@ -57,39 +64,23 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
+                var existingModule = await _context.Modules.FirstOrDefaultAsync(m => (m.ModuleName == module.ModuleName || m.ModulePage == module.ModulePage) && m.ModuleId != module.ModuleId);
+
+                if (existingModule != null)
+                {
+                    throw new Exception("Module already exists.");
+                }
+
                 _context.Entry(module).Property(u => u.ModuleName).IsModified = true;
                 _context.Entry(module).Property(u => u.Description).IsModified = true;
                 _context.Entry(module).Property(u => u.ModulePage).IsModified = true;
                 _context.Entry(module).Property(u => u.IsActive).IsModified = true;
                 _context.Entry(module).Property(u => u.Icon).IsModified = true;
+                _context.Entry(module).Property(u => u.SortNo).IsModified = true;
                 _context.Entry(module).Property(u => u.UpdatedBy).IsModified = true;
                 _context.Entry(module).Property(u => u.DateUpdated).IsModified = true;
 
                 await _context.SaveChangesAsync();
-
-                return await GetAllModules(2);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public async Task<List<ModuleModel>> RemoveModule(int moduleId)
-        {
-            try
-            {
-                var module = await _context.Modules.Where(x => x.ModuleId == moduleId).FirstOrDefaultAsync();
-
-                if (module != null)
-                {
-                    _context.Modules.Remove(module);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception("Module not found.");
-                }
 
                 return await GetAllModules(2);
             }
