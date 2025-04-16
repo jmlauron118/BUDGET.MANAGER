@@ -586,13 +586,13 @@ body {
   padding: 15px;
   width: 50%;
 }
-#usermanager .form-container .inner-forms .wrapper table tbody tr {
-  /*Users*/
-}
 #usermanager .form-container .inner-forms .wrapper table tbody tr:hover .nav-container {
   opacity: 1;
 }
-#usermanager .form-container .inner-forms .wrapper table tbody tr .user-status {
+#usermanager .form-container .inner-forms .wrapper table tbody tr .user-status,
+#usermanager .form-container .inner-forms .wrapper table tbody tr .module-status,
+#usermanager .form-container .inner-forms .wrapper table tbody tr .action-status,
+#usermanager .form-container .inner-forms .wrapper table tbody tr .role-status {
   display: block;
   margin: 0 auto;
   font-size: 1em;

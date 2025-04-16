@@ -24,9 +24,11 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                                     where module.IsActive == 1 && action.IsActive == 1
                                     select new
                                     {
-                                        moduleAction,
+                                        moduleAction.ModuleActionId,
+                                        moduleAction.ModuleId,
                                         module.ModuleName,
                                         ModuleDescription = module.Description,
+                                        moduleAction.ActionId,
                                         action.ActionName,
                                         ActionDescription = action.Description
                                     };
@@ -51,14 +53,14 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             }
         }
 
-        public async Task<List<ModuleActionModel>> AddModuleAction(ModuleActionModel moduleAction)
+        public async Task<List<object>> AddModuleAction(ModuleActionModel moduleAction)
         {
             try
             {
                 _context.ModuleActions.Add(moduleAction);
                 await _context.SaveChangesAsync();
 
-                return await _context.ModuleActions.ToListAsync();
+                return await GetAllModuleActions();
             }
             catch
             {
@@ -66,32 +68,48 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             }
         }
 
-        public async Task<List<ModuleActionModel>> ModifyModuleAction(ModuleActionModel moduleAction)
+        public async Task<List<object>> ModifyModuleAction(ModuleActionModel moduleAction)
         {
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                var moduleActionResp = await _context.ModuleActions.FirstOrDefaultAsync(e => e.ModuleActionId == moduleAction.ModuleActionId);
-
-                if (moduleActionResp != null)
+                try
                 {
-                    moduleActionResp.ModuleId = moduleAction.ModuleId;
-                    moduleActionResp.ActionId = moduleAction.ActionId;
-                    moduleActionResp.UpdatedBy = moduleAction.UpdatedBy;
-                    moduleActionResp.DateUpdated = DateTime.Now;
+                    var moduleActionResp = await _context.ModuleActions.FirstOrDefaultAsync(e => e.ModuleActionId == moduleAction.ModuleActionId);
 
-                    _context.ModuleActions.Update(moduleActionResp);
-                    await _context.SaveChangesAsync();
+                    if (moduleActionResp != null)
+                    {
+                        _context.ModuleActions.Remove(moduleActionResp);
+                        await _context.SaveChangesAsync();
+
+                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT ModuleActions ON");
+
+                        var updatedModuleAction = new ModuleActionModel{
+                            ModuleActionId = moduleAction.ModuleActionId,
+                            ModuleId = moduleAction.ModuleId,
+                            ActionId = moduleAction.ActionId,
+                            CreatedBy = moduleActionResp.CreatedBy,
+                            DateCreated = moduleActionResp.DateCreated,
+                            UpdatedBy = moduleAction.UpdatedBy,
+                            DateUpdated = moduleAction.DateUpdated
+                        };
+
+                        _context.ModuleActions.Add(updatedModuleAction);
+                        await _context.SaveChangesAsync();
+                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT ModuleActions OFF");
+                        await transaction.CommitAsync();
+                    }
+
+                    return await GetAllModuleActions();
                 }
-
-                return await _context.ModuleActions.ToListAsync();
-            }
-            catch
-            {
-                throw;
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
         }
 
-        public async Task<List<ModuleActionModel>> RemoveModuleAction(int moduleActionId)
+        public async Task<List<object>> RemoveModuleAction(int moduleActionId)
         {
             try
             {
@@ -107,7 +125,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                     throw new Exception("ModuleAction not found");
                 }
 
-                return await _context.ModuleActions.ToListAsync();
+                return await GetAllModuleActions();
             }
             catch
             {

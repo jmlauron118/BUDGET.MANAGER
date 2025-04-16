@@ -23,14 +23,14 @@ namespace BUDGET.MANAGER.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<UserRoleModel>().HasAlternateKey(e => new { e.UserId, e.RoleId });
-            modelBuilder.Entity<ModuleActionModel>().HasAlternateKey(e => new { e.ModuleId, e.ActionId });
-            modelBuilder.Entity<ModuleAccessModel>().HasAlternateKey(e => new { e.ModuleActionId, e.UserRoleId });
-            modelBuilder.Entity<ActionModel>().HasAlternateKey(e => new { e.ActionName });
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<UserRoleModel>().HasAlternateKey(e => new { e.UserId, e.RoleId });
+        //    modelBuilder.Entity<ModuleActionModel>().HasAlternateKey(e => new { e.ModuleId, e.ActionId });
+        //    modelBuilder.Entity<ModuleAccessModel>().HasAlternateKey(e => new { e.ModuleActionId, e.UserRoleId });
+        //    modelBuilder.Entity<ActionModel>().HasAlternateKey(e => new { e.ActionName });
 
-            base.OnModelCreating(modelBuilder);
-        }
+        //    base.OnModelCreating(modelBuilder);
+        //}
     }
 }

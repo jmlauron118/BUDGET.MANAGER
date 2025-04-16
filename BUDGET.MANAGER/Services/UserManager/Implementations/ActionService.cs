@@ -14,11 +14,11 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             _context = context;
         }
 
-        public async Task<List<ActionModel>> GetAllActions()
+        public async Task<List<ActionModel>> GetAllActions(int status)
         {
             try
             {
-                return await _context.Actions.ToListAsync();
+                return await _context.Actions.Where(a => status == 2 || a.IsActive == status).ToListAsync();
             }
             catch
             {
@@ -30,7 +30,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
-                return await _context.Actions.Where(x => x.ActionId == actionId).ToListAsync();
+                return await _context.Actions.Where(a => a.ActionId == actionId).ToListAsync();
             }
             catch
             {
@@ -45,7 +45,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 _context.Actions.Add(action);
                 await _context.SaveChangesAsync();
 
-                return await _context.Actions.ToListAsync();
+                return await GetAllActions(2);
             }
             catch
             {
@@ -55,29 +55,44 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
 
         public async Task<List<ActionModel>> ModifyAction(ActionModel action)
         {
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                var actionResp = await _context.Actions.FirstOrDefaultAsync(e => e.ActionId == action.ActionId);
-
-                if (actionResp != null)
+                try
                 {
-                    _context.Entry(actionResp).State = EntityState.Detached;
+                    var actionResp = await _context.Actions.FirstOrDefaultAsync(a => a.ActionId == action.ActionId);
 
-                    actionResp.ActionName = action.ActionName;
-                    actionResp.Description = action.Description;
-                    actionResp.IsActive = action.IsActive;
-                    actionResp.UpdatedBy = action.UpdatedBy;
-                    actionResp.DateUpdated = action.DateUpdated;
+                    if (actionResp != null)
+                    {
+                        _context.Actions.Remove(actionResp);
+                        await _context.SaveChangesAsync();
 
-                    _context.Update(actionResp);
-                    await _context.SaveChangesAsync();
+                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actions ON");
+
+                        var updatedAction = new ActionModel
+                        {
+                            ActionId = action.ActionId,
+                            ActionName = action.ActionName,
+                            Description = action.Description,
+                            IsActive = action.IsActive,
+                            CreatedBy = actionResp.CreatedBy,
+                            DateCreated = actionResp.DateCreated,
+                            UpdatedBy = action.UpdatedBy,
+                            DateUpdated = action.DateUpdated
+                        };
+
+                        _context.Actions.Add(updatedAction);
+                        await _context.SaveChangesAsync();
+                        await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Actions OFF");
+                        await transaction.CommitAsync();
+                    }
+
+                    return await GetAllActions(2);
                 }
-
-                return await _context.Actions.ToListAsync();
-            }
-            catch
-            {
-                throw;
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
         }
     }

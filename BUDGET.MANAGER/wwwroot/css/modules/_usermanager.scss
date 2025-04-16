@@ -35,8 +35,11 @@
                                     opacity: 1;
                                 }
                             }
-                            /*Users*/
-                            .user-status {
+
+                            .user-status, 
+                            .module-status,
+                            .action-status,
+                            .role-status {
                                 display: block;
                                 margin: 0 auto;
                                 font-size: 1em;

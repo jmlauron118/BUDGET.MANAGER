@@ -13,6 +13,8 @@ namespace BUDGET.MANAGER.Controllers
     {
         // The user service
         private readonly IUserService _userService;
+        // The role service
+        private readonly IRoleService _roleService;
         // The module service
         private readonly IModuleService _moduleService;
         // The action service
@@ -28,11 +30,13 @@ namespace BUDGET.MANAGER.Controllers
          * @param moduleActionService - The module action service
          */
         public UserManagerController(IUserService userService,
+                                     IRoleService roleService,
                                      IModuleService moduleService,
                                      IActionService actionService,
                                      IModuleActionService moduleActionService)
         {
             _userService = userService;
+            _roleService = roleService;
             _moduleService = moduleService;
             _actionService = actionService;
             _moduleActionService = moduleActionService;
@@ -52,13 +56,13 @@ namespace BUDGET.MANAGER.Controllers
          * Get all users
          */
         [HttpPost]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(int status)
         {
             var _response = new ResponseModel<List<UserModel>>();
 
             try
             {
-                var users = await _userService.GetAllUsers();
+                var users = await _userService.GetAllUsers(status);
 
                 if (users.Count > 0)
                 {
@@ -75,7 +79,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -109,7 +113,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -149,7 +153,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -181,13 +185,138 @@ namespace BUDGET.MANAGER.Controllers
                 else
                 {
                     _response.Status = 0;
-                    _response.Message = "No users found."; ;
+                    _response.Message = "No users found.";
                 }
             }
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        public async Task<IActionResult> GetAllRoles(int status)
+        {
+            var _response = new ResponseModel<List<RoleModel>>();
+
+            try
+            {
+                var roles = await _roleService.GetAllRoles(status);
+                if (roles.Count > 0)
+                {
+                    _response.Data = roles;
+                    _response.Status = 1;
+                    _response.Message = "Roles loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No roles found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        public async Task<IActionResult> GetRoleById(int roleId)
+        {
+            var _response = new ResponseModel<List<RoleModel>>();
+
+            try
+            {
+                var role = await _roleService.GetRoleById(roleId);
+
+                if (role.Count > 0)
+                {
+                    _response.Data = role;
+                    _response.Status = 1;
+                    _response.Message = "Role loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "Role does not exist.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        public async Task<IActionResult> AddRole(RoleModel roleModel)
+        {
+            var _response = new ResponseModel<List<RoleModel>>();
+
+            try
+            {
+                //Temporary values since there are no authentication yet
+                roleModel.CreatedBy = 1;
+                roleModel.DateCreated = DateTime.Now;
+                roleModel.UpdatedBy = 1;
+                roleModel.DateUpdated = DateTime.Now;
+
+                var roles = await _roleService.AddRole(roleModel);
+
+                if (roles.Count > 0)
+                {
+                    _response.Data = roles;
+                    _response.Status = 1;
+                    _response.Message = "Role added successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No roles found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        public async Task<IActionResult> ModifyRole(RoleModel roleModel)
+        {
+            var _response = new ResponseModel<List<RoleModel>>();
+
+            try
+            {
+                //Temporary values since there are no authentication yet
+                roleModel.UpdatedBy = 1;
+                roleModel.DateUpdated = DateTime.Now;
+
+                var roles = await _roleService.ModifyRole(roleModel);
+
+                if (roles.Count > 0)
+                {
+                    _response.Data = roles;
+                    _response.Status = 1;
+                    _response.Message = "Role modified successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No roles found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -199,12 +328,14 @@ namespace BUDGET.MANAGER.Controllers
          * @param moduleId - The ID of the module to get
          */
         [HttpPost]
-        public async Task<IActionResult> GetAllModules()
+        public async Task<IActionResult> GetAllModules(int status)
         {
             var _response = new ResponseModel<List<ModuleModel>>();
+
             try
             {
-                var modules = await _moduleService.GetAllModules();
+                var modules = await _moduleService.GetAllModules(status);
+
                 if (modules.Count > 0)
                 {
                     _response.Data = modules;
@@ -220,7 +351,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
             return Json(_response);
         }
@@ -253,7 +384,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
             return Json(_response);
         }
@@ -292,7 +423,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
             return Json(_response);
         }
@@ -329,7 +460,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
             return Json(_response);
         }
@@ -352,7 +483,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
             return Json(_response);
         }
@@ -361,12 +492,12 @@ namespace BUDGET.MANAGER.Controllers
          * Get all actions
          */
         [HttpPost]
-        public async Task<IActionResult> GetAllActions()
+        public async Task<IActionResult> GetAllActions(int status)
         {
             var _response = new ResponseModel<List<ActionModel>>();
             try
             {
-                var actions = await _actionService.GetAllActions();
+                var actions = await _actionService.GetAllActions(status);
 
                 if (actions.Count > 0)
                 {
@@ -383,7 +514,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -418,7 +549,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -458,7 +589,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -496,14 +627,14 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetAllModuleActions()
+        public async Task<IActionResult> GetAllModuleActions(int status)
         {
             var _response = new ResponseModel<List<object>>();
 
@@ -526,7 +657,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex);
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -556,7 +687,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -565,7 +696,7 @@ namespace BUDGET.MANAGER.Controllers
         [HttpPost]
         public async Task<IActionResult> AddModuleAction(ModuleActionModel moduleAction)
         {
-            var _response = new ResponseModel<List<ModuleActionModel>>();
+            var _response = new ResponseModel<List<object>>();
 
             try
             {
@@ -592,7 +723,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);
@@ -601,7 +732,8 @@ namespace BUDGET.MANAGER.Controllers
         [HttpPost]
         public async Task<IActionResult> ModifyModuleAction(ModuleActionModel moduleAction)
         {
-            var _response = new ResponseModel<List<ModuleActionModel>>();
+            var _response = new ResponseModel<List<object>>();
+
             try
             {
                 //Temporary values since there are no authentication yet
@@ -625,15 +757,16 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+                _response.Message = ex.Message;
             }
+
             return Json(_response);
         }
 
         [HttpPost]
         public async Task<IActionResult> RemoveModuleAction(int moduleActionId)
         {
-            var _response = new ResponseModel<List<ModuleActionModel>>();
+            var _response = new ResponseModel<List<object>>();
 
             try
             {
@@ -644,7 +777,7 @@ namespace BUDGET.MANAGER.Controllers
             catch (Exception ex)
             {
                 _response.Status = 2;
-                _response.Message = ErrorValidation.ErrorMsg(ex); ;
+                _response.Message = ex.Message;
             }
 
             return Json(_response);

@@ -6,7 +6,7 @@
         {
             string returnValue = string.Empty;
 
-            if (ex.InnerException.Message == null)
+            if (ex.InnerException == null || ex.InnerException.Message == null)
             {
                 returnValue = ex.Message;
             }

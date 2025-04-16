@@ -14,11 +14,11 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             _context = context;
         }
 
-        public async Task<List<UserModel>> GetAllUsers()
+        public async Task<List<UserModel>> GetAllUsers(int status)
         {
             try
             {
-                return await _context.Users.ToListAsync();
+                return await _context.Users.Where(u => status == 2 || u.IsActive == status).ToListAsync();
             }
             catch
             {
@@ -30,7 +30,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
-                return await _context.Users.Where(x => x.UserId == userId).ToListAsync();
+                return await _context.Users.Where(u => u.UserId == userId).ToListAsync();
             }
             catch
             {
@@ -42,9 +42,17 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
+
+                if (existingUser != null)
+                {
+                    throw new Exception("Username already exists.");
+                }
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return await _context.Users.ToListAsync();
+
+                return await GetAllUsers(2);
             }
             catch
             {
@@ -56,6 +64,13 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username && u.UserId != user.UserId);
+
+                if (existingUser != null)
+                {
+                    throw new Exception("Username already exists.");
+                }
+
                 _context.Entry(user).Property(u => u.Firstname).IsModified = true;
                 _context.Entry(user).Property(u => u.Lastname).IsModified = true;
                 _context.Entry(user).Property(u => u.Gender).IsModified = true;
@@ -65,7 +80,8 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 _context.Entry(user).Property(u => u.DateUpdated).IsModified = true;
 
                 await _context.SaveChangesAsync();
-                return await _context.Users.ToListAsync();
+
+                return await GetAllUsers(2);
             }
             catch
             {

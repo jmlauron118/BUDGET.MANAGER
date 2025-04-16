@@ -14,11 +14,11 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
             _context = context;
         }
 
-        public async Task<List<ModuleModel>> GetAllModules()
+        public async Task<List<ModuleModel>> GetAllModules(int status)
         {
             try
             {
-                return await _context.Modules.OrderBy(x => x.SortNo).ThenBy(x => x.ModuleName).ToListAsync();
+                return await _context.Modules.Where(module => status == 2 || module.IsActive == status).OrderBy(x => x.SortNo).ThenBy(x => x.ModuleName).ToListAsync();
             }
             catch
             {
@@ -45,7 +45,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 _context.Modules.Add(module);
                 await _context.SaveChangesAsync();
 
-                return await GetAllModules();
+                return await GetAllModules(2);
             }
             catch
             {
@@ -67,7 +67,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
 
                 await _context.SaveChangesAsync();
 
-                return await GetAllModules();
+                return await GetAllModules(2);
             }
             catch
             {
@@ -91,7 +91,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                     throw new Exception("Module not found.");
                 }
 
-                return await GetAllModules();
+                return await GetAllModules(2);
             }
             catch
             {
