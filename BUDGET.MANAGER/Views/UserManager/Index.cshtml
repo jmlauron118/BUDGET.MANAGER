@@ -84,6 +84,17 @@
                 </div>
                 @await Html.PartialAsync("./PartialViews/_ModuleActions.cshtml")
             </div>
+            <!--User Roles-->
+            <div id="user-role" class="jumbotron tab-pane fade" role="tabpanel">
+                <div class="header">
+                    <h5>User Roles</h5>
+                    <button id="btnUserRolePageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalUserRoleDetails">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add User Role
+                    </button>
+                    <hr />
+                </div>
+                @await Html.PartialAsync("./PartialViews/_UserRoles.cshtml")
+            </div>
         </div>
     </div>
 </div>

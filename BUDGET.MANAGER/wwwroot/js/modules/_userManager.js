@@ -409,8 +409,6 @@ function Module() {
                 else {
                     _module.AddModule(moduleData);
                 }
-
-                $("#modalModuleDetails").modal("hide");
             }).setHeader(`${CapitalizeWords(action)} module`);
         });
 
@@ -519,6 +517,7 @@ function Module() {
             }
             else {
                 Notif(response.message, "success");
+                $("#modalModuleDetails").modal("hide");
                 _module.PopulateModule(response.data);
             }
         });
@@ -531,6 +530,7 @@ function Module() {
             }
             else {
                 Notif(response.message, "success");
+                $("#modalModuleDetails").modal("hide");
                 _module.PopulateModule(response.data);
             }
         });
@@ -580,8 +580,6 @@ function Action() {
                 else {
                     _action.AddAction(actionData);
                 }
-
-                $("#modalActionDetails").modal("hide");
             }).setHeader(`${CapitalizeWords(action)} action`);
         });
 
@@ -675,6 +673,7 @@ function Action() {
             }
             else {
                 Notif(response.message, "success");
+                $("#modalActionDetails").modal("hide");
                 _action.PopulateAction(response.data);
             }
         });
@@ -687,6 +686,7 @@ function Action() {
             }
             else {
                 Notif(response.message, "success");
+                $("#modalActionDetails").modal("hide");
                 _action.PopulateAction(response.data);
             }
         });
@@ -724,8 +724,6 @@ function ModuleAction() {
                 else {
                     _moduleAction.AddModuleAction(moduleActionData);
                 }
-
-                $("#modalModuleActionDetails").modal("hide");
             }).setHeader(`${CapitalizeWords(action)} module action`);
         });
 
@@ -776,7 +774,8 @@ function ModuleAction() {
                             <td>
                                 <span>${moduleAction.moduleName}</span><br/>
                                 <div class="nav-container">
-                                    <a class="edit-module-action active" data-module-action-id="${moduleAction.moduleActionId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a>
+                                    <a class="edit-module-action active" data-module-action-id="${moduleAction.moduleActionId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a> |
+                                    <a class="remove-module-action active text-red" data-module-action-id="${moduleAction.moduleActionId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
                                 </div>
                             </td>
                             <td>${moduleAction.moduleDescription}</td>
@@ -809,6 +808,14 @@ function ModuleAction() {
             }).catch((err) => {
                 Notif(`PopulateModuleAction: ${err}`, "danger");
             });
+        });
+
+        $(".remove-module-action").on("click", function () {
+            var moduleActionId = $(this).data("module-action-id");
+
+            alertify.confirm(`Are you sure you want to remove this module action?`, function (e) {
+                _moduleAction.RemoveModuleAction(moduleActionId);
+            }).setHeader(`Remove module action`);
         });
     }
 
@@ -849,6 +856,7 @@ function ModuleAction() {
             }
             else {
                 Notif(response.message, "success");
+                $("#modalModuleActionDetails").modal("hide");
                 _moduleAction.PopulateModuleAction(response.data);
             }
         });
@@ -861,7 +869,20 @@ function ModuleAction() {
             }
             else {
                 Notif(response.message, "success");
+                $("#modalModuleActionDetails").modal("hide");
                 _moduleAction.PopulateModuleAction(response.data);
+            }
+        });
+    }
+
+    this.RemoveModuleAction = function (moduleActionId) {
+        $.post("/UserManager/RemoveModuleAction", { moduleActionId: moduleActionId }, function (response) {
+            if (response.status === 1) {
+                Notif(response.message, "success");
+                _moduleAction.PopulateModuleAction(response.data);
+            }
+            else {
+                Notif(response.message, "danger");
             }
         });
     }
