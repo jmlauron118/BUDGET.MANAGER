@@ -26,6 +26,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                                 {
                                     userRole.UserRoleId,
                                     userRole.UserId,
+                                    FullName = user.Lastname + ", " + user.Firstname,
                                     UserName = user.Username,
                                     userRole.RoleId,
                                     RoleName = role.Role
@@ -55,14 +56,75 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
-                var existingUserRole = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userRole.UserId && ur.RoleId == userRole.RoleId);
+                var existingUserRole = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userRole.UserId);
+
                 if (existingUserRole != null)
                 {
-                    return new List<object> { "User role already exists." };
+                    throw new Exception("The role for the selected user has already been assigned.");
                 }
-                await _context.UserRoles.AddAsync(userRole);
+
+                _context.UserRoles.Add(userRole);
                 await _context.SaveChangesAsync();
-                return new List<object> { "User role added successfully." };
+
+                return await GetAllUserRoles();
+            }
+            catch
+
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<object>> ModifyUserRole(UserRoleModel userRole)
+        {
+            try
+            {
+                var existingUserRole = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userRole.UserId && ur.UserRoleId != userRole.UserRoleId);
+
+                if (existingUserRole != null)
+                {
+                    throw new Exception("The role for the selected user has already been assigned.");
+                }
+
+                _context.Entry(userRole).Property(ur => ur.UserId).IsModified = true;
+                _context.Entry(userRole).Property(ur => ur.RoleId).IsModified = true;
+                _context.Entry(userRole).Property(ur => ur.UpdatedBy).IsModified = true;
+                _context.Entry(userRole).Property(ur => ur.DateUpdated).IsModified = true;
+
+                await _context.SaveChangesAsync();
+
+                return await GetAllUserRoles();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<object>> RemoveUserRole(int userRoleId)
+        {
+            try
+            { 
+                var userRole = await _context.UserRoles.FindAsync(userRoleId);
+
+                if (userRole != null)
+                {
+                    var moduleAccess = await _context.ModuleAccess.FindAsync(userRoleId);
+                    if (moduleAccess != null)
+                    {
+                        _context.ModuleAccess.Remove(moduleAccess);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    _context.UserRoles.Remove(userRole);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("User role not found.");
+                }
+
+                return await GetAllUserRoles();
             }
             catch
             {

@@ -73,6 +73,8 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 _context.Entry(role).Property(r => r.Role).IsModified = true;
                 _context.Entry(role).Property(r => r.Description).IsModified = true;
                 _context.Entry(role).Property(r => r.IsActive).IsModified = true;
+                _context.Entry(role).Property(r => r.UpdatedBy).IsModified = true;
+                _context.Entry(role).Property(r => r.DateUpdated).IsModified = true;
 
                 await _context.SaveChangesAsync();
 

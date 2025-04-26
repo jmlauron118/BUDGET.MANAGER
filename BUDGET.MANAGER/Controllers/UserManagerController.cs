@@ -21,6 +21,10 @@ namespace BUDGET.MANAGER.Controllers
         private readonly IActionService _actionService;
         // The module action service
         private readonly IModuleActionService _moduleActionService;
+        // The user role service
+        private readonly IUserRoleService _userRoleService;
+        // The module access service
+        private readonly IModuleAccessService _moduleAccessService;
 
         /**
          * Constructor
@@ -28,18 +32,24 @@ namespace BUDGET.MANAGER.Controllers
          * @param moduleService - The module service
          * @param actionService - The action service
          * @param moduleActionService - The module action service
+         * @param userRoleService - The user role service
+         * @param moduleAccessService - The module access service
          */
         public UserManagerController(IUserService userService,
                                      IRoleService roleService,
                                      IModuleService moduleService,
                                      IActionService actionService,
-                                     IModuleActionService moduleActionService)
+                                     IModuleActionService moduleActionService,
+                                     IUserRoleService userRoleService,
+                                     IModuleAccessService moduleAccessService)
         {
             _userService = userService;
             _roleService = roleService;
             _moduleService = moduleService;
             _actionService = actionService;
             _moduleActionService = moduleActionService;
+            _userRoleService = userRoleService;
+            _moduleAccessService = moduleAccessService;
         }
 
         /**
@@ -197,6 +207,10 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Get all user roles
+         */
+        [HttpPost]
         public async Task<IActionResult> GetAllRoles(int status)
         {
             var _response = new ResponseModel<List<RoleModel>>();
@@ -225,6 +239,12 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Get role by ID
+         *
+         * @param roleId - The ID of the role to get
+         */
+        [HttpPost]
         public async Task<IActionResult> GetRoleById(int roleId)
         {
             var _response = new ResponseModel<List<RoleModel>>();
@@ -254,6 +274,12 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Add a new role
+         *
+         * @param roleModel - The role to add
+         */
+        [HttpPost]
         public async Task<IActionResult> AddRole(RoleModel roleModel)
         {
             var _response = new ResponseModel<List<RoleModel>>();
@@ -289,6 +315,12 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Modify an existing role
+         *
+         * @param roleModel - The role to modify
+         */
+        [HttpPost]
         public async Task<IActionResult> ModifyRole(RoleModel roleModel)
         {
             var _response = new ResponseModel<List<RoleModel>>();
@@ -610,8 +642,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Get all module actions
+         */
         [HttpPost]
-        public async Task<IActionResult> GetAllModuleActions(int status)
+        public async Task<IActionResult> GetAllModuleActions()
         {
             var _response = new ResponseModel<List<object>>();
 
@@ -640,6 +675,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Get module action by ID
+         *
+         * @param moduleActionId - The ID of the module action to get
+         */
         [HttpPost]
         public async Task<IActionResult> GetModuleActionById(int moduleActionId)
         {
@@ -670,6 +710,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Add a new module action
+         *
+         * @param moduleAction - The module action to add
+         */
         [HttpPost]
         public async Task<IActionResult> AddModuleAction(ModuleActionModel moduleAction)
         {
@@ -706,6 +751,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Modify an existing module action
+         *
+         * @param moduleAction - The module action to modify
+         */
         [HttpPost]
         public async Task<IActionResult> ModifyModuleAction(ModuleActionModel moduleAction)
         {
@@ -740,6 +790,11 @@ namespace BUDGET.MANAGER.Controllers
             return Json(_response);
         }
 
+        /**
+         * Remove a module action
+         *
+         * @param moduleActionId - The ID of the module action to remove
+         */
         [HttpPost]
         public async Task<IActionResult> RemoveModuleAction(int moduleActionId)
         {
@@ -750,6 +805,304 @@ namespace BUDGET.MANAGER.Controllers
                 _response.Data = await _moduleActionService.RemoveModuleAction(moduleActionId);
                 _response.Status = 1;
                 _response.Message = "Module Action deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllUserRoles()
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                var userRoles = await _userRoleService.GetAllUserRoles();
+
+                if (userRoles.Count > 0)
+                {
+                    _response.Data = userRoles;
+                    _response.Status = 1;
+                    _response.Message = "User Roles loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No User Roles found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetUserRoleById(int userRoleId)
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                var userRole = await _userRoleService.GetUserRoleById(userRoleId);
+
+                if (userRole.Count > 0)
+                {
+                    _response.Data = userRole;
+                    _response.Status = 1;
+                    _response.Message = "User Role loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "User Role does not exist.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserRole(UserRoleModel userRole)
+        {
+            var _response = new ResponseModel<List<object>>();
+            try
+            {
+                //Temporary values since there are no authentication yet
+                userRole.CreatedBy = 1;
+                userRole.DateCreated = DateTime.Now;
+                userRole.UpdatedBy = 1;
+                userRole.DateUpdated = DateTime.Now;
+
+                var userRoles = await _userRoleService.AddUserRole(userRole);
+
+                if (userRoles.Count > 0)
+                {
+                    _response.Data = userRoles;
+                    _response.Status = 1;
+                    _response.Message = "User Role added successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No User Roles found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModifyUserRole(UserRoleModel userRole)
+        {
+            var _response = new ResponseModel<List<object>>();
+            try
+            {
+                //Temporary values since there are no authentication yet
+                userRole.UpdatedBy = 1;
+                userRole.DateUpdated = DateTime.Now;
+
+                var userRoles = await _userRoleService.ModifyUserRole(userRole);
+
+                if (userRoles.Count > 0)
+                {
+                    _response.Data = userRoles;
+                    _response.Status = 1;
+                    _response.Message = "User Role modified successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No User Roles found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveUserRole(int userRoleId)
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                _response.Data = await _userRoleService.RemoveUserRole(userRoleId);
+                _response.Status = 1;
+                _response.Message = "User Role deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllModuleAccess()
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                var moduleAccess = await _moduleAccessService.GetAllModuleAccess();
+
+                if (moduleAccess.Count > 0)
+                {
+                    _response.Data = moduleAccess;
+                    _response.Status = 1;
+                    _response.Message = "Module Access loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No Module Access found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetModuleAccessById(int moduleAccessId)
+        {
+            var _response = new ResponseModel<List<ModuleAccessModel>>();
+
+            try
+            {
+                var moduleAccess = await _moduleAccessService.GetModuleAccessById(moduleAccessId);
+
+                if (moduleAccess.Count > 0)
+                {
+                    _response.Data = moduleAccess;
+                    _response.Status = 1;
+                    _response.Message = "Module Access loaded successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "Module Access does not exist.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddModuleAccess(ModuleAccessModel moduleAccess)
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                //Temporary values since there are no authentication yet
+                moduleAccess.CreatedBy = 1;
+                moduleAccess.DateCreated = DateTime.Now;
+                moduleAccess.UpdatedBy = 1;
+                moduleAccess.DateUpdated = DateTime.Now;
+
+                var moduleAccesses = await _moduleAccessService.AddModuleAccess(moduleAccess);
+
+                if (moduleAccesses.Count > 0)
+                {
+                    _response.Data = moduleAccesses;
+                    _response.Status = 1;
+                    _response.Message = "Module Access added successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No Module Access found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModifyModuleAccess(ModuleAccessModel moduleAccess)
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                //Temporary values since there are no authentication yet
+                moduleAccess.UpdatedBy = 1;
+                moduleAccess.DateUpdated = DateTime.Now;
+
+                var moduleAccesses = await _moduleAccessService.ModifyModuleAccess(moduleAccess);
+
+                if (moduleAccesses.Count > 0)
+                {
+                    _response.Data = moduleAccesses;
+                    _response.Status = 1;
+                    _response.Message = "Module Access modified successfully.";
+                }
+                else
+                {
+                    _response.Status = 0;
+                    _response.Message = "No Module Access found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = 2;
+                _response.Message = ex.Message;
+            }
+
+            return Json(_response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveModuleAccess(int moduleAccessId)
+        {
+            var _response = new ResponseModel<List<object>>();
+
+            try
+            {
+                _response.Data = await _moduleAccessService.RemoveModuleAccess(moduleAccessId);
+                _response.Status = 1;
+                _response.Message = "Module Access deleted successfully.";
             }
             catch (Exception ex)
             {

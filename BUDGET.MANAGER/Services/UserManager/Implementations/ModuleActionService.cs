@@ -105,11 +105,11 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
         {
             try
             {
-                var moduleActionResp = await _context.ModuleActions.FirstOrDefaultAsync(e => e.ModuleActionId == moduleActionId);
+                var moduleActionResp = await _context.ModuleActions.FindAsync(moduleActionId);
 
                 if (moduleActionResp != null)
                 {
-                    var moduleAccess = await _context.ModuleAccess.FirstOrDefaultAsync(e => e.ModuleActionId == moduleActionId);
+                    var moduleAccess = await _context.ModuleAccess.FindAsync(moduleActionId);
 
                     if (moduleAccess != null)
                     {

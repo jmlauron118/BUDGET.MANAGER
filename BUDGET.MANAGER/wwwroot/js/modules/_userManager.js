@@ -49,8 +49,12 @@ function UserManager() {
                     action.InitAction();
                 case "btnModuleActions":
                     const moduleAction = new ModuleAction();
-                    moduleAction.GetAllModuleActions(2);
+                    moduleAction.GetAllModuleActions();
                     moduleAction.InitModuleAction();
+                case "btnUserRoles":
+                    const userRoles = new UserRoles();
+                    userRoles.GetAllUserRoles();
+                    userRoles.InitUserRoles();
             }
         });
     }
@@ -350,7 +354,7 @@ function Role() {
     }
 
     this.AddRole = function (roleModel) {
-        $.post("/UserManager/AddRole", { roleModel: roleModel }, function(response) {
+        $.post("/UserManager/AddRole", { roleModel: roleModel }, function (response) {
             if (response.status === 2) {
                 Notif(response.message, "danger");
             }
@@ -740,8 +744,8 @@ function ModuleAction() {
         });
     }
 
-    this.GetAllModuleActions = function (status) {
-        $.post("/UserManager/GetAllModuleActions", { status: status }, function (response) {
+    this.GetAllModuleActions = function () {
+        $.post("/UserManager/GetAllModuleActions", function (response) {
             if (response.status === 2) {
                 Notif(response.message, "danger");
             }
@@ -887,3 +891,196 @@ function ModuleAction() {
         });
     }
 }
+
+function UserRoles() {
+    const _userRoles = this;
+
+    this.InitUserRoles = function () {
+        _userRoles.LoadUsers();
+        _userRoles.LoadRoles();
+
+        $("#btnSubmitUserRole").data("action", "add");
+        $("#btnSubmitUserRole").off().on("click", function () {
+            var form = $("#userRoleForm");
+
+            if (!form.valid()) {
+                return;
+            }
+
+            var action = $(this).data("action");
+
+            alertify.confirm(`Are you sure you want to ${action} this user role?`, function (e) {
+                var userRoleData = {
+                    UserId: $("#UserRoleUserName").val(),
+                    RoleId: $("#UserRoleRoleName").val()
+                };
+
+                if (action == "update") {
+                    userRoleData.UserRoleId = $("#btnSubmitUserRole").data("id");
+                    _userRoles.ModifyUserRole(userRoleData);
+                }
+                else {
+                    _userRoles.AddUserRole(userRoleData);
+                }
+            }).setHeader(`${CapitalizeWords(action)} user role`);
+        });
+
+        $("#modalUserRoleDetails").off().on("hidden.bs.modal", function () {
+            $("#userRoleModalTitle").text("New User Role");
+            $("#btnSubmitUserRole").html('<i aria-hidden="true" class="fa fa-plus"></i> Add User Role');
+            $("#btnSubmitUserRole").data("action", "add");
+            $("#btnSubmitUserRole").removeAttr("data-id");
+            $(this).find('.field-validation-error, .field-validation-valid').children().remove();
+        });
+
+        $("#btnUserRolePageToggle").off().on("click", function () {
+            $("#btnClearUserRoleForm").trigger("click");
+        });
+    }
+
+    this.GetAllUserRoles = function () {
+        $.post("/UserManager/GetAllUserRoles", function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                _userRoles.PopulateUserRole(response.data);
+            }
+        });
+    }
+
+    this.GetUserRoleById = function (userRoleId) {
+        return new Promise((resolve, reject) => {
+            $.post("/UserManager/GetUserRoleById", { userRoleId: userRoleId }, function (response) {
+                if (response.status === 1) {
+                    resolve(response.data);
+                }
+                else {
+                    reject(response.message);
+                }
+            });
+        });
+    }
+
+    this.LoadUsers = function () {
+        $.post("/UserManager/GetAllUsers", { status: 1 }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                $("#UserRoleUserName").empty();
+                $("#UserRoleUserName").append(`<option value="">Select user</option>`);
+                response.data.forEach(user => {
+                    $("#UserRoleUserName").append(`<option value="${user.userId}">${user.lastname}, ${user.firstname} - ${user.username}</option>`);
+                });
+            }
+        });
+    }
+
+    this.LoadRoles = function () {
+        $.post("/UserManager/GetAllRoles", { status: 1 }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                $("#UserRoleRoleName").empty();
+                $("#UserRoleRoleName").append(`<option value="">Select role</option>`);
+                response.data.forEach(role => {
+                    $("#UserRoleRoleName").append(`<option value="${role.roleId}">${role.role}</option>`);
+                });
+            }
+        });
+    }
+
+    this.PopulateUserRole = function (data) {
+        $("#user-role-table tbody").empty();
+
+        if (data != null) {
+            data.forEach(userRole => {
+                const row = `
+                        <tr>
+                            <td>
+                                <span>${userRole.fullName}</span><br/>
+                                <div class="nav-container">
+                                    <a class="edit-user-role active" data-user-role-id="${userRole.userRoleId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a> |
+                                    <a class="remove-user-role active text-red" data-user-role-id="${userRole.userRoleId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
+                                </div>
+                            </td>
+                            <td>${userRole.userName}</td>
+                            <td>${userRole.roleName}</td>
+                        </tr>
+                    `;
+
+                $("#user-role-table tbody").append(row);
+            });
+        }
+        else {
+            $("#user-role-table tbody").append(`<tr class="text-center">
+                        <td colspan="6">No user role data found.</td>
+                    </tr>`);
+        }
+
+        $(".edit-user-role").on("click", function () {
+            _userRoles.GetUserRoleById($(this).data("user-role-id")).then((userRoleData) => {
+                var userRole = userRoleData[0];
+
+                $("#modalUserRoleDetails").modal("show");
+                $("#userRoleModalTitle").text("Update User Role");
+                $("#btnSubmitUserRole").html('<i aria-hidden="true" class="fa fa-pencil"></i> Update User Role');
+                $("#btnSubmitUserRole").data("action", "update");
+                $("#btnSubmitUserRole").data("id", $(this).data("user-role-id"));
+
+                $("#UserRoleUserName").val(userRole.userId);
+                $("#UserRoleRoleName").val(userRole.roleId);
+            }).catch((err) => {
+                Notif(`PopulateUserRole: ${err}`, "danger");
+            });
+        });
+
+        $(".remove-user-role").on("click", function () {
+            var userRoleId = $(this).data("user-role-id");
+
+            alertify.confirm(`Are you sure you want to remove this user role?`, function (e) {
+                _userRoles.RemoveUserRole(userRoleId);
+            }).setHeader(`Remove user role`);
+        });
+    }
+
+    this.AddUserRole = function (userRole) {
+        $.post("/UserManager/AddUserRole", { userRole: userRole }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                $("#modalUserRoleDetails").modal("hide");
+                _userRoles.PopulateUserRole(response.data);
+            }
+        });
+    }
+
+    this.ModifyUserRole = function (userRole) {
+        $.post("/UserManager/ModifyUserRole", { userRole: userRole }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                $("#modalUserRoleDetails").modal("hide");
+                _userRoles.PopulateUserRole(response.data);
+            }
+        });
+    }
+
+    this.RemoveUserRole = function (userRoleId) {
+        $.post("/UserManager/RemoveUserRole", { userRoleId: userRoleId }, function (response) {
+            if (response.status === 1) {
+                Notif(response.message, "success");
+                _userRoles.PopulateUserRole(response.data);
+            }
+            else {
+                Notif(response.message, "danger");
+            }
+        });
+    }
+} 
