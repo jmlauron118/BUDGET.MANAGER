@@ -55,6 +55,10 @@ function UserManager() {
                     const userRoles = new UserRoles();
                     userRoles.GetAllUserRoles();
                     userRoles.InitUserRoles();
+                case "btnModuleAccess":
+                    const moduleAccess = new ModuleAccess();
+                    moduleAccess.GetAllModuleAccess();
+                    moduleAccess.InitModuleAccess();
             }
         });
     }
@@ -776,7 +780,7 @@ function ModuleAction() {
                 const row = `
                         <tr>
                             <td>
-                                <span>${moduleAction.moduleName}</span><br/>
+                                <span><i class="${moduleAction.icon}"></i> ${moduleAction.moduleName}</span><br/>
                                 <div class="nav-container">
                                     <a class="edit-module-action active" data-module-action-id="${moduleAction.moduleActionId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a> |
                                     <a class="remove-module-action active text-red" data-module-action-id="${moduleAction.moduleActionId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
@@ -1084,3 +1088,197 @@ function UserRoles() {
         });
     }
 } 
+
+function ModuleAccess() {
+    const _moduleAccess = this;
+
+    this.InitModuleAccess = function () {
+        _moduleAccess.LoadModuleAction();
+        _moduleAccess.LoadUserRole();
+
+        $("#btnSubmitModuleAccess").data("action", "add");
+        $("#btnSubmitModuleAccess").off().on("click", function () {
+            var form = $("#moduleAccessForm");
+
+            if (!form.valid()) {
+                return;
+            }
+
+            var action = $(this).data("action");
+
+            alertify.confirm(`Are you sure you want to ${action} this module access?`, function (e) {
+                var moduleAccessData = {
+                    ModuleActionId: $("#ModuleAccessModuleAction").val(),
+                    UserRoleId: $("#ModuleAccessUserRole").val()
+                };
+
+                if (action == "update") {
+                    moduleAccessData.ModuleAccessId = $("#btnSubmitModuleAccess").data("id");
+                    _moduleAccess.ModifyModuleAccess(moduleAccessData);
+                }
+                else {
+                    _moduleAccess.AddModuleAccess(moduleAccessData);
+                }
+            }).setHeader(`${CapitalizeWords(action)} module access`);
+        });
+
+        $("#modalModuleAccessDetails").off().on("hidden.bs.modal", function () {
+            $("#moduleAccessModalTitle").text("New User Role");
+            $("#btnSubmitModuleAccess").html('<i aria-hidden="true" class="fa fa-plus"></i> Add Module Access');
+            $("#btnSubmitModuleAccess").data("action", "add");
+            $("#btnSubmitModuleAccess").removeAttr("data-id");
+            $(this).find('.field-validation-error, .field-validation-valid').children().remove();
+        });
+
+        $("#btnModuleAccessPageToggle").off().on("click", function () {
+            $("#btnClearModuleAccessForm").trigger("click");
+        });
+    }
+
+    this.GetAllModuleAccess = function () {
+        $.post("/UserManager/GetAllModuleAccess", function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                _moduleAccess.PopulateModuleAccess(response.data);
+            }
+        });
+    }
+
+    this.GetModuleAccessById = function (moduleAccessId) {
+        return new Promise((resolve, reject) => {
+            $.post("/UserManager/GetModuleAccessById", { moduleAccessId: moduleAccessId }, function (response) {
+                if (response.status === 1) {
+                    resolve(response.data);
+                }
+                else {
+                    reject(response.message);
+                }
+            });
+        });
+    }
+
+    this.LoadModuleAction = function () {
+        $.post("/UserManager/GetAllModuleActions", function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                $("#ModuleAccessModuleAction").empty();
+                $("#ModuleAccessModuleAction").append(`<option value="">Select module action</option>`);
+                response.data.forEach(mac => {
+                    $("#ModuleAccessModuleAction").append(`<option value="${mac.moduleActionId}">${mac.moduleName} - ${mac.actionName}</option>`);
+                });
+            }
+        });
+    }
+
+    this.LoadUserRole = function () {
+        $.post("/UserManager/GetAllUserRoles", function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                $("#ModuleAccessUserRole").empty();
+                $("#ModuleAccessUserRole").append(`<option value="">Select user role</option>`);
+                response.data.forEach(ur => {
+                    $("#ModuleAccessUserRole").append(`<option value="${ur.userRoleId}">${ur.userName} - ${ur.roleName}</option>`);
+                });
+            }
+        });
+    }
+
+    this.PopulateModuleAccess = function (data) {
+        $("#module-access-table tbody").empty();
+
+        if (data != null) {
+            data.forEach(moduleAccess => {
+                const row = `
+                        <tr>
+                            <td>
+                                <span><i class="${moduleAccess.icon}"></i> ${moduleAccess.moduleName}</span><br/>
+                                <div class="nav-container">
+                                    <a class="edit-module-access active" data-module-access-id="${moduleAccess.moduleAccessId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a> |
+                                    <a class="remove-module-access active text-red" data-module-access-id="${moduleAccess.moduleAccessId}" href="#"><i aria-hidden="true" class="fa fa-trash"></i> Remove</a>
+                                </div>
+                            </td>
+                            <td>${moduleAccess.actionName}</td>
+                            <td>${moduleAccess.username}</td>
+                            <td>${moduleAccess.role}</td>
+                        </tr>
+                    `;
+
+                $("#module-access-table tbody").append(row);
+            });
+        }
+        else {
+            $("#module-access-table tbody").append(`<tr class="text-center">
+                        <td colspan="6">No module access data found.</td>
+                    </tr>`);
+        }
+
+        $(".edit-module-access").on("click", function () {
+            _moduleAccess.GetModuleAccessById($(this).data("module-access-id")).then((moduleAccessData) => {
+                var moduleAccess = moduleAccessData[0];
+
+                $("#modalModuleAccessDetails").modal("show");
+                $("#moduleAccessModalTitle").text("Update Module Access");
+                $("#btnSubmitModuleAccess").html('<i aria-hidden="true" class="fa fa-pencil"></i> Update Module Access');
+                $("#btnSubmitModuleAccess").data("action", "update");
+                $("#btnSubmitModuleAccess").data("id", $(this).data("module-access-id"));
+
+                $("#ModuleAccessModuleAction").val(moduleAccess.moduleActionId);
+                $("#ModuleAccessUserRole").val(moduleAccess.userRoleId);
+            }).catch((err) => {
+                Notif(`PopulateModuleAccess: ${err}`, "danger");
+            });
+        });
+
+        $(".remove-module-access").on("click", function () {
+            var moduleAccessId = $(this).data("module-access-id");
+
+            alertify.confirm(`Are you sure you want to remove this module access?`, function (e) {
+                _moduleAccess.RemoveModuleAccess(moduleAccessId);
+            }).setHeader(`Remove module access`);
+        });
+    }
+
+    this.AddModuleAccess = function (moduleAccess) {
+        $.post("/UserManager/AddModuleAccess", { moduleAccess: moduleAccess }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                $("#modalModuleAccessDetails").modal("hide");
+                _moduleAccess.PopulateModuleAccess(response.data);
+            }
+        });
+    }
+
+    this.ModifyModuleAccess = function (moduleAccess) {
+        $.post("/UserManager/ModifyModuleAccess", { moduleAccess: moduleAccess }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                $("#modalModuleAccessDetails").modal("hide");
+                _moduleAccess.PopulateModuleAccess(response.data);
+            }
+        });
+    }
+
+    this.RemoveModuleAccess = function (moduleAccessId) {
+        $.post("/UserManager/RemoveModuleAccess", { moduleAccessId: moduleAccessId }, function (response) {
+            if (response.status === 1) {
+                Notif(response.message, "success");
+                _moduleAccess.PopulateModuleAccess(response.data);
+            }
+            else {
+                Notif(response.message, "danger");
+            }
+        });
+    }
+}

@@ -16,7 +16,7 @@ namespace BUDGET.MANAGER
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("PCConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnection"));
             });
 
             builder.Services.AddScoped<IUserService, UserService>();

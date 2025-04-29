@@ -28,6 +28,7 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                                         moduleAction.ModuleId,
                                         module.ModuleName,
                                         ModuleDescription = module.Description,
+                                        module.Icon,
                                         moduleAction.ActionId,
                                         action.ActionName,
                                         ActionDescription = action.Description
