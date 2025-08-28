@@ -1,0 +1,51 @@
+﻿@using FINANCE.TRACKER.ViewModels.UserManager
+@using FINANCE.TRACKER.ViewModels.UserManager
+@model ModuleAccessViewModel;
+
+<div id="module-access-table" class="inner-forms">
+    <div class="wrapper row">
+        <section class="forms">
+            <table id="tblModuleAccess" style="width: 100%;" class="table table-hover" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Action</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+        <div class="modal fade" id="modalModuleAccessDetails" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header primary-background">
+                        <h5 class="modal-title" id="moduleAccessModalTitle">New Module Access</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="moduleAccessForm" method="post">
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="ModuleAccessModuleAction">Module Action</label>
+                                <select asp-for="ModuleAccessModuleAction" class="form-select"></select>
+                                <span asp-validation-for="ModuleAccessModuleAction" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="ModuleAccessUserRole">User role</label>
+                                <select asp-for="ModuleAccessUserRole" class="form-select"></select>
+                                <span asp-validation-for="ModuleAccessUserRole" class="text-danger"></span>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-end">
+                                <button id="btnClearModuleAccessForm" type="reset" class="btn btn-secondary me-2">Clear</button>
+                                <button id="btnSubmitModuleAccess" type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add Module Access</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@using FINANCE.TRACKER.ViewModels.UserManager
+@using FINANCE.TRACKER.ViewModels.UserManager
+@model ModuleViewModel;
+
+<div id="module-table" class="inner-forms">
+    <div class="wrapper row">
+        <section class="forms">
+            <table id="tblModules" style="width: 100%;" class="table table-hover" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Module Page</th>
+                        <th>Description</th>
+                        <th>Icon</th>
+                        <th>Sort No</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+        <div class="modal fade" id="modalModuleDetails" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header primary-background">
+                        <h5 class="modal-title" id="moduleModalTitle">New Module</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="moduleForm" method="post">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="ModuleName" class="form-label">Module name</label>
+                                    <input asp-for="ModuleName" class="form-control pascal-input" autocomplete="off" />
+                                    <span asp-validation-for="ModuleName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label asp-for="ModulePage" class="form-label">Module page</label>
+                                    <input asp-for="ModulePage" class="form-control" autocomplete="off" />
+                                    <span asp-validation-for="ModulePage" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="form-group col-md-12">
+                                    <label asp-for="ModuleDescription" class="form-label">Description</label>
+                                    <textarea asp-for="ModuleDescription" class="form-control" autocomplete="off"></textarea>
+                                    <span asp-validation-for="ModuleDescription" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="form-group col-md-6">
+                                    <label asp-for="Icon" class="form-label">Module icon</label>
+                                    <input asp-for="Icon" class="form-control" placeholder="Ex. fa fa-fw fa-users" autocomplete="off" />
+                                    <span asp-validation-for="Icon" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="txtSortNo" class="form-label">Sort No.</label>
+                                    <input id="txtSortNo" class="form-control number-only" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="chkModuleStatus">Status</label><br />
+                                    <input id="chkModuleStatus" type="checkbox" checked data-on-text="Active" data-off-text="Inactive" data-on-color="success" data-off-color="danger">
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div class="d-flex justify-content-end">
+                                <button id="btnClearModuleForm" type="reset" class="btn btn-secondary me-2">Clear</button>
+                                <button id="btnSubmitModule" type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add Module</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
