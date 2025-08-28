@@ -271,10 +271,7 @@
                     tr {
                         .nav-container {
                             opacity: 1 !important;
-
-                            .grant-user-access {
-                                display: block;
-                            }
+                            display: flex;
                         }
                     }
                 }

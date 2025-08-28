@@ -1,4 +1,5 @@
 using BUDGET.MANAGER.Data;
+using BUDGET.MANAGER.Models;
 using BUDGET.MANAGER.Services.Interfaces;
 using BUDGET.MANAGER.Services.UserManager.Implementations;
 using BUDGET.MANAGER.Services.UserManager.Interfaces;
@@ -12,8 +13,27 @@ namespace BUDGET.MANAGER
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+                options.InstanceName = "BudgetManager_";
+            });
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+                options.Cookie.HttpOnly = true; // Set the cookie to be HttpOnly
+                options.Cookie.IsEssential = true; // Make the session cookie essential
+            });
+
+            builder.Services.AddHttpContextAccessor();
+
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<ViewModuleFilter>();
+            });
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnection"));
@@ -27,6 +47,7 @@ namespace BUDGET.MANAGER
             builder.Services.AddScoped<IUserRoleService, UserRoleService>();
             builder.Services.AddScoped<IModuleAccessService, ModuleAccessService>();
 
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -39,6 +60,7 @@ namespace BUDGET.MANAGER
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 
@@ -46,7 +68,7 @@ namespace BUDGET.MANAGER
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+                pattern: "{controller=Login}/{action=Index}/{id?}");
 
 
             app.Run();

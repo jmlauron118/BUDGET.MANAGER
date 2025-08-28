@@ -707,14 +707,82 @@ body {
   }
   #usermanager .form-container table tbody tr .nav-container {
     opacity: 1 !important;
-  }
-  #usermanager .form-container table tbody tr .nav-container .grant-user-access {
-    display: block;
+    display: flex;
   }
 }
 @media screen and (min-width: 768px) {
   #usermanager .form-container {
     padding-left: 0;
+  }
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  background: #ffffff;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.login-wrapper .login-container {
+  width: 100%;
+  max-width: 800px;
+  min-height: 500px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+}
+.login-wrapper .login-container .app-title-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(45deg, #2b6777, #52ab98), linear-gradient(135deg, rgba(51, 255, 87, 0.8), rgb(255, 0, 0));
+  padding: 40px;
+  color: #ffffff;
+  width: 60%;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+.login-wrapper .login-container .app-title-container h1 {
+  word-wrap: break-word;
+  margin: 0;
+}
+.login-wrapper .login-container #loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 60px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .login-wrapper .login-container {
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+    margin: 10px;
+  }
+  .login-wrapper .login-container .app-title-container {
+    width: 100%;
+    text-align: center;
+    padding: 30px;
+    border-radius: unset;
+  }
+  .login-wrapper .login-container .app-title-container h1 {
+    font-size: 2.5rem;
+  }
+  .login-wrapper .login-container #loginForm {
+    padding: 30px;
   }
 }
 .primary-background {

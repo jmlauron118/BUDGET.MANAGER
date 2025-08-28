@@ -88,5 +88,17 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 throw;
             }
         }
+
+        public async Task<List<UserModel>> GetLogginUser(string username, string password)
+        {
+            try
+            {
+                return await _context.Users.Where(u => u.Username == username && u.Password == password && u.IsActive == 1).ToListAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

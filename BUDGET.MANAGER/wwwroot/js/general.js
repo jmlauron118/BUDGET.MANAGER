@@ -1,6 +1,15 @@
 ﻿// @ts-nocheck
 document.addEventListener("DOMContentLoaded", function () {
     Validations();
+
+    document.getElementById("btnLogout").addEventListener("click", throttle(() => {
+        $.post("../Login/Logout", function () {
+            window.location = "../Login/Index";
+            setTimeout(() => {
+                Notif("You have been logged out successfully.", "success");
+            });
+        });
+    }, 1000));
 });
 
 function Validations() {
@@ -16,6 +25,17 @@ function Validations() {
 
         $(this).val(capitalized);
     });
+}
+
+function throttle(fn, limit) {
+    let inThrottle;
+    return function (...args) {
+        if (!inThrottle) {
+            fn.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => (inThrottle = false), limit);
+        }
+    };
 }
 
 /**

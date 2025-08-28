@@ -1,4 +1,5 @@
 ﻿using BUDGET.MANAGER.Data;
+using BUDGET.MANAGER.Models.Login;
 using BUDGET.MANAGER.Models.UserManager;
 using BUDGET.MANAGER.Services.UserManager.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -120,6 +121,36 @@ namespace BUDGET.MANAGER.Services.UserManager.Implementations
                 await _context.SaveChangesAsync();
 
                 return await GetAllModuleAccess();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<UserModuleModel>> GetUserModules(int userId)
+        {
+            try
+            {
+                var userModules = from moduleAccess in _context.ModuleAccess
+                                  join moduleAction in _context.ModuleActions on moduleAccess.ModuleActionId equals moduleAction.ModuleActionId
+                                  join module in _context.Modules on moduleAction.ModuleId equals module.ModuleId
+                                  join action in _context.Actions on moduleAction.ActionId equals action.ActionId
+                                  join userRole in _context.UserRoles on moduleAccess.UserRoleId equals userRole.UserRoleId
+                                  join user in _context.Users on userRole.UserId equals user.UserId
+                                  join role in _context.Roles on userRole.RoleId equals role.RoleId
+                                  where (module.IsActive == 1 && action.IsActive == 1) && (user.IsActive == 1 && role.IsActive == 1) && user.UserId == userId
+                                  orderby module.SortNo
+                                  select new UserModuleModel
+                                  {
+                                      ModuleId = module.ModuleId,
+                                      ModuleName = module.ModuleName,
+                                      Icon = module.Icon,
+                                      ActionName = action.ActionName,
+                                      SortNo = module.SortNo
+                                  };
+
+                return await userModules.ToListAsync();
             }
             catch
             {

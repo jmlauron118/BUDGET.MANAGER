@@ -3,6 +3,7 @@ using BUDGET.MANAGER.Models.UserManager;
 using BUDGET.MANAGER.Services.Interfaces;
 using BUDGET.MANAGER.Services.UserManager.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace BUDGET.MANAGER.Controllers
 {
@@ -25,6 +26,9 @@ namespace BUDGET.MANAGER.Controllers
         private readonly IUserRoleService _userRoleService;
         // The module access service
         private readonly IModuleAccessService _moduleAccessService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        private Helper _helper;
 
         /**
          * Constructor
@@ -41,7 +45,8 @@ namespace BUDGET.MANAGER.Controllers
                                      IActionService actionService,
                                      IModuleActionService moduleActionService,
                                      IUserRoleService userRoleService,
-                                     IModuleAccessService moduleAccessService)
+                                     IModuleAccessService moduleAccessService,
+                                     IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _roleService = roleService;
@@ -50,6 +55,7 @@ namespace BUDGET.MANAGER.Controllers
             _moduleActionService = moduleActionService;
             _userRoleService = userRoleService;
             _moduleAccessService = moduleAccessService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /**
@@ -137,13 +143,15 @@ namespace BUDGET.MANAGER.Controllers
         public async Task<IActionResult> AddUser(UserModel user)
         {
             var _response = new ResponseModel<List<UserModel>>();
+            _helper = new Helper(_httpContextAccessor);
 
             try
             {
-                //Temporary values since there are no authentication yet
-                user.CreatedBy = 1;
+                int userId = _helper.GetUserId();
+
+                user.CreatedBy = userId;
                 user.DateCreated = DateTime.Now;
-                user.UpdatedBy = 1;
+                user.UpdatedBy = userId;
                 user.DateUpdated = DateTime.Now;
 
                 var users = await _userService.AddUser(user);
@@ -177,11 +185,11 @@ namespace BUDGET.MANAGER.Controllers
         public async Task<IActionResult> ModifyUser(UserModel user)
         {
             var _response = new ResponseModel<List<UserModel>>();
+            _helper = new Helper(_httpContextAccessor);
 
             try
             {
-                //Temporary values since there are no authentication yet
-                user.UpdatedBy = 1;
+                user.UpdatedBy = _helper.GetUserId();
                 user.DateUpdated = DateTime.Now;
 
                 var users = await _userService.ModifyUser(user);

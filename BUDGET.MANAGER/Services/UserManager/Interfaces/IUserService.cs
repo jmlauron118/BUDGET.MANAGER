@@ -9,5 +9,6 @@ namespace BUDGET.MANAGER.Services.Interfaces
         Task<List<UserModel>> GetUserById(int userId);
         Task<List<UserModel>> AddUser(UserModel user);
         Task<List<UserModel>> ModifyUser(UserModel user);
+        Task<List<UserModel>> GetLogginUser(string username, string password);
     }
 }

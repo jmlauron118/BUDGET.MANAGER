@@ -1,4 +1,5 @@
-﻿using BUDGET.MANAGER.Models.UserManager;
+﻿using BUDGET.MANAGER.Models.Login;
+using BUDGET.MANAGER.Models.UserManager;
 
 namespace BUDGET.MANAGER.Services.UserManager.Interfaces
 {
@@ -9,5 +10,6 @@ namespace BUDGET.MANAGER.Services.UserManager.Interfaces
         Task<List<object>> AddModuleAccess(ModuleAccessModel moduleAccess);
         Task<List<object>> ModifyModuleAccess(ModuleAccessModel moduleAccess);
         Task<List<object>> RemoveModuleAccess(int moduleAccessId);
+        Task<List<UserModuleModel>> GetUserModules(int userId);
     }
 }
