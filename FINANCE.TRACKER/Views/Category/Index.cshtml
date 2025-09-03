@@ -1,0 +1,44 @@
+﻿<h4>@ViewData["Title"]</h4>
+
+<div id="category" class="row pt-2">
+    <div class="col-md-3">
+        <div class="list-group">
+            <a id="btnBudgetCategory" href="#budget" class="list-group-item list-group-item-action active">
+                <i class="fa-solid fa-money-bill-trend-up" aria-hidden="true"></i> &nbsp;Budget
+            </a>
+            <a id="btnExpensesCategory" href="#expenses" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-receipt" aria-hidden="true"></i> &nbsp;Expenses
+            </a>
+        </div>
+        <hr class="list-group-divider" />
+    </div>
+    <div class="col-md-9 form-container">
+        <div class="tab-content">
+            <!--Budget-->
+            <div id="budget" class="jumbotron tab-pane fade show active" role="tabpanel">
+                <div class="header">
+                    <h5>Budget Category</h5>
+                    <button id="btnBudgetPageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalBudgetCategoryDetails">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Budget Category
+                    </button>
+                    <hr />
+                </div>
+                @await Html.PartialAsync("./PartialViews/_BudgetCategory.cshtml")
+            </div>
+            <!--Expenses-->
+            <div id="expenses" class="jumbotron tab-pane fade" role="tabpanel">
+                <div class="header">
+                    <h5>Expenses Category</h5>
+                    <button id="btnExpensesPageToggle" type="button" class="ml-2 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalExpensesCategoryDetails">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Expenses Category
+                    </button>
+                    <hr />
+                </div>
+                @await Html.PartialAsync("./PartialViews/_ExpensesCategory.cshtml")
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/modules/_category.js"></script>
+}

@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("btnLogout").addEventListener("click", throttle(() => {
         $.post("../Login/Logout", function () {
-            window.location = "../Login/Index";
+            Notif("You have been logged out successfully.", "success");
             setTimeout(() => {
-                Notif("You have been logged out successfully.", "success");
-            });
+                window.location = "../Login/Index";
+            }, 2000);
         });
     }, 1000));
 });

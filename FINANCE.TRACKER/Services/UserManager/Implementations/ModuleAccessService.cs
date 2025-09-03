@@ -145,6 +145,7 @@ namespace FINANCE.TRACKER.Services.UserManager.Implementations
                                   {
                                       ModuleId = module.ModuleId,
                                       ModuleName = module.ModuleName,
+                                      ModulePage = module.ModulePage,
                                       Icon = module.Icon,
                                       ActionName = action.ActionName,
                                       SortNo = module.SortNo

@@ -1,4 +1,8 @@
-﻿<div class="sidebar-container">
+﻿@{
+    var userModules = Context.Items["UserModules"] as List<FINANCE.TRACKER.Models.Login.UserModuleModel>;
+}
+
+<div class="sidebar-container">
     <div class="sidebar">
         <ul class="sidebar-menu-list text-secondary scrollbar-macosx">
             <li class="sidebar-head d-md-none d-flex">
@@ -7,24 +11,22 @@
                     <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">BUDGET MANAGER</a>
                 </span>
             </li>
-            <li class="sidebar-menu" data-page-title="Dashboard">
-                <a class="sidebar-link" data-toggle="tooltip" title="Dashboard" data-placement="right" asp-controller="Dashboard" asp-action="Index"></a>
-                <span class="menu-icon">
-                    <i class="fa-solid fa-house fa-fw"></i>
-                </span>
-                <span class="menu-text">
-                    Dashboard
-                </span>
-            </li>
-            <li class="sidebar-menu" data-page-title="User Manager">
-                <a class="sidebar-link" data-toggle="tooltip" title="User Manager" data-placement="right" asp-controller="UserManager" asp-action="Index"></a>
-                <span class="menu-icon">
-                    <i class="fa-solid fa-users fa-fw"></i>
-                </span>
-                <span class="menu-text">
-                    User Manager
-                </span>
-            </li>
+
+            @if (userModules != null)
+            {
+                foreach(var module in userModules)
+                {
+                    <li class="sidebar-menu" data-page-title="@module.ModuleName">
+                        <a class="sidebar-link" data-toggle="tooltip" title="@module.ModuleName" data-placement="right" asp-controller="@module.ModulePage" asp-action="Index"></a>
+                        <span class="menu-icon">
+                            <i class="@module.Icon"></i>
+                        </span>
+                        <span class="menu-text">
+                            @module.ModuleName
+                        </span>
+                    </li>
+                }
+            }
         </ul>
     </div>
     <div class="sidebar-overlay"></div>

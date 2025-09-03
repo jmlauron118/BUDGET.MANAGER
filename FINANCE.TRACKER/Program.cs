@@ -1,5 +1,7 @@
 using FINANCE.TRACKER.Data;
 using FINANCE.TRACKER.Models;
+using FINANCE.TRACKER.Services.Category.Implementations;
+using FINANCE.TRACKER.Services.Category.Interfaces;
 using FINANCE.TRACKER.Services.UserManager.Implementations;
 using FINANCE.TRACKER.Services.UserManager.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +47,7 @@ namespace FINANCE.TRACKER
             builder.Services.AddScoped<IModuleActionService, ModuleActionService>();
             builder.Services.AddScoped<IUserRoleService, UserRoleService>();
             builder.Services.AddScoped<IModuleAccessService, ModuleAccessService>();
+            builder.Services.AddScoped<IBudgetCategoryService, BudgetCategoryService>();
 
 
             var app = builder.Build();

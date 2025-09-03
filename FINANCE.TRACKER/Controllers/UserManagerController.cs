@@ -2,7 +2,6 @@
 using FINANCE.TRACKER.Models.UserManager;
 using FINANCE.TRACKER.Services.UserManager.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace FINANCE.TRACKER.Controllers
 {
@@ -27,25 +26,17 @@ namespace FINANCE.TRACKER.Controllers
         private readonly IModuleAccessService _moduleAccessService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private Helper _helper;
+        private Helper? _helper;
 
-        /**
-         * Constructor
-         * @param userService - The user service
-         * @param moduleService - The module service
-         * @param actionService - The action service
-         * @param moduleActionService - The module action service
-         * @param userRoleService - The user role service
-         * @param moduleAccessService - The module access service
-         */
-        public UserManagerController(IUserService userService,
-                                     IRoleService roleService,
-                                     IModuleService moduleService,
-                                     IActionService actionService,
-                                     IModuleActionService moduleActionService,
-                                     IUserRoleService userRoleService,
-                                     IModuleAccessService moduleAccessService,
-                                     IHttpContextAccessor httpContextAccessor)
+        public UserManagerController(
+            IUserService userService,
+            IRoleService roleService,
+            IModuleService moduleService,
+            IActionService actionService,
+            IModuleActionService moduleActionService,
+            IUserRoleService userRoleService,
+            IModuleAccessService moduleAccessService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _roleService = roleService;

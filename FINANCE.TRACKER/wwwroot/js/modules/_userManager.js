@@ -213,7 +213,6 @@ function User() {
     this.AddUser = function (user) {
         $.post("/UserManager/AddUser", { user: user }, function (response) {
             if (response.status === 2) {
-                debugger;
                 Notif(response.message, "danger");
             }
             else {

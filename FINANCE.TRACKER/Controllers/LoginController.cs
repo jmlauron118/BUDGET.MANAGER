@@ -59,7 +59,6 @@ namespace FINANCE.TRACKER.Controllers
 
                 if (user != null && user.Count > 0)
                 {
-                    // Explicitly cast the userModules to the correct type
                     var userModules = await _moduleAccessService.GetUserModules(user[0].UserId);
 
                     var userDetails = new UserDataModel

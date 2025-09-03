@@ -1,4 +1,5 @@
-﻿using FINANCE.TRACKER.Models.UserManager;
+﻿using FINANCE.TRACKER.Models.Category;
+using FINANCE.TRACKER.Models.UserManager;
 using Microsoft.EntityFrameworkCore;
 
 namespace FINANCE.TRACKER.Data
@@ -18,6 +19,9 @@ namespace FINANCE.TRACKER.Data
         public DbSet<ModuleActionModel> ModuleActions { get; set; }
 
         public DbSet<ModuleAccessModel> ModuleAccess { get; set; }
+
+        public DbSet<BudgetCategoryModel> BudgetCategories { get; set; }
+        public DbSet<ExpensesCategoryModel> ExpenseCategories { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

@@ -565,6 +565,88 @@ body {
     margin-left: 0.1em !important;
   }
 }
+#category {
+  margin-top: 2rem;
+}
+#category .form-container h5 {
+  display: inline-block;
+}
+#category .form-container .inner-forms {
+  padding-left: 10px;
+  width: 200%;
+}
+#category .form-container .inner-forms .wrapper {
+  -webkit-transition: all 0.65s ease;
+  transition: all 0.65s ease;
+}
+#category .form-container .inner-forms .wrapper.next-page {
+  transform: translateX(-50%);
+}
+#category .form-container .inner-forms .wrapper .forms {
+  padding: 15px;
+  width: 50%;
+}
+#category .form-container .inner-forms .wrapper table tbody tr:hover .nav-container {
+  opacity: 1;
+}
+#category .form-container .inner-forms .wrapper table tbody tr .budget-category-status,
+#category .form-container .inner-forms .wrapper table tbody tr .expenses-category-status {
+  display: block;
+  margin: 0 auto;
+  font-size: 1em;
+  font-weight: 400;
+  min-width: 100%;
+  text-align: center;
+}
+#category .form-container .inner-forms .wrapper table tbody tr .nav-container {
+  font-size: 1.1em;
+  padding-top: 5px;
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#category .form-container .inner-forms .wrapper .bootstrap-switch-wrapper {
+  margin-top: -2px;
+}
+#category .form-container .next-page-toggle, #category .form-container .modal-toggle {
+  padding: 0.25rem 1rem;
+  margin-top: -7px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#category .list-group-divider {
+  display: none;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+#category .tab-content .jumbotron {
+  overflow-x: hidden;
+  padding: 1rem;
+  background-color: #ffffff;
+}
+
+@media screen and (max-width: 768px) {
+  #category .list-group-divider {
+    display: block;
+  }
+  #category .form-container .next-page-toggle, #category .form-container .modal-toggle {
+    position: absolute;
+    right: 1.5rem;
+    margin-top: 0;
+  }
+  #category .form-container table tbody tr .nav-container {
+    opacity: 1 !important;
+    display: flex;
+  }
+}
+@media screen and (min-width: 768px) {
+  #category .form-container {
+    padding-left: 0;
+  }
+}
 #usermanager {
   margin-top: 2rem;
 }
@@ -628,72 +710,6 @@ body {
   overflow-x: hidden;
   padding: 1rem;
   background-color: #ffffff;
-}
-#usermanager #modalAddModuleAction.update .modal-content .modal-header {
-  background-color: #52ab98;
-}
-#usermanager #modalAddModuleAction.update .modal-content .modal-header h5:after {
-  content: "Update Module Action";
-}
-#usermanager #modalAddModuleAction .modal-content .modal-header h5:after {
-  content: "Add Module Action";
-}
-#usermanager #modalAddModuleAction .modal-body .btn-group.bootstrap-select {
-  width: 100%;
-}
-#usermanager #modalAddUserRole.update .modal-content .modal-header {
-  background-color: #52ab98;
-}
-#usermanager #modalAddUserRole.update .modal-content .modal-header h5:after {
-  content: "Update User Role";
-}
-#usermanager #modalAddUserRole .modal-content .modal-header h5:after {
-  content: "Add User Role";
-}
-#usermanager #modalAddAction.update .modal-content .modal-header {
-  background-color: #52ab98;
-}
-#usermanager #modalAddAction.update .modal-content .modal-header h5:after {
-  content: "Update Action";
-}
-#usermanager #modalAddAction .modal-content .modal-header h5:after {
-  content: "Add Action";
-}
-#usermanager #modalAddUserAccess.update .modal-content .modal-header {
-  background-color: #52ab98;
-}
-#usermanager #modalAddUserAccess.update .modal-content .modal-header h5:after {
-  content: "Update User Access";
-}
-#usermanager #modalAddUserAccess .modal-content .modal-header h5:after {
-  content: "Add User Access";
-}
-#usermanager #modalAddUserAccess .modal-content .modal-body .btn-group.bootstrap-select {
-  width: 100%;
-}
-#usermanager #modalAddRoleAccess.update .modal-content .modal-header {
-  background-color: #52ab98;
-}
-#usermanager #modalAddRoleAccess.update .modal-content .modal-header h5:after {
-  content: "Update Module Access";
-}
-#usermanager #modalAddRoleAccess .modal-content .modal-header h5:after {
-  content: "Add Module Access";
-}
-#usermanager #modalAddRoleAccess .modal-content .modal-body .btn-group.bootstrap-select {
-  width: 100%;
-}
-#usermanager #modalAddDataAccess.update .modal-content .modal-header {
-  background-color: #52ab98;
-}
-#usermanager #modalAddDataAccess.update .modal-content .modal-header h5:after {
-  content: "Update Data Access";
-}
-#usermanager #modalAddDataAccess .modal-content .modal-header h5:after {
-  content: "Add Data Access";
-}
-#usermanager #modalAddDataAccess .modal-content .modal-body .btn-group.bootstrap-select {
-  width: 100%;
 }
 
 @media screen and (max-width: 768px) {

@@ -2,7 +2,6 @@
     Layout = null;
 }
 @using FINANCE.TRACKER.ViewModels.Login
-@using FINANCE.TRACKER.ViewModels.Login
 @model LoginViewModel
 
 <!DOCTYPE html>
@@ -50,5 +49,14 @@
     <script src="~/lib/snackbar/js/snackbar.min.js"></script>
     <script src="~/js/general.js"></script>
     <script src="~/js/modules/_login.js"></script>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            window.onload = function () {
+                Notif("@TempData["ErrorMessage"]", "danger");
+            };
+        </script>
+    }
+
 </body>
 </html>

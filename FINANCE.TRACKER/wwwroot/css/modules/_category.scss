@@ -1,7 +1,7 @@
 ﻿@import '../base/colors';
 @import '../base/sizes';
 
-#usermanager {
+#category {
     margin-top: 2rem;
 
     .form-container {
@@ -36,10 +36,8 @@
                                 }
                             }
 
-                            .user-status, 
-                            .module-status,
-                            .action-status,
-                            .role-status {
+                            .budget-category-status,
+                            .expenses-category-status {
                                 display: block;
                                 margin: 0 auto;
                                 font-size: 1em;
@@ -92,7 +90,7 @@
 }
 
 @media screen and (max-width: $bootstrap-breakpoint-md) {
-    #usermanager {
+    #category {
         .list-group-divider {
             display: block;
         }
@@ -119,7 +117,7 @@
 }
 
 @media screen and (min-width: $bootstrap-breakpoint-md) {
-    #usermanager {
+    #category {
         .form-container {
             padding-left: 0;
         }
