@@ -2,7 +2,6 @@
 using FINANCE.TRACKER.Models.Category;
 using FINANCE.TRACKER.Services.Category.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace FINANCE.TRACKER.Services.Category.Implementations
 {
@@ -65,7 +64,7 @@ namespace FINANCE.TRACKER.Services.Category.Implementations
         {
             try
             {
-                var existingCategory = _context.ExpenseCategories.FirstOrDefaultAsync(c => c.ExpensesCategoryName == expensesCategory.ExpensesCategoryName && c.ExpensesCategoryId != expensesCategory.ExpensesCategoryId);
+                var existingCategory = await _context.ExpenseCategories.FirstOrDefaultAsync(c => c.ExpensesCategoryName == expensesCategory.ExpensesCategoryName && c.ExpensesCategoryId != expensesCategory.ExpensesCategoryId);
 
                 if (existingCategory != null)
                 {

@@ -32,10 +32,10 @@ function Category() {
                     const budget = new BudgetCategory();
                     budget.GetAllBudgetCategory(2);
                     budget.InitBudgetCategory();
-                //case "btnRoles":
-                //    const role = new Role();
-                //    role.GetAllRoles(2);
-                //    role.InitRole();
+                case "btnExpensesCategory":
+                    const expenses = new ExpensesCategory();
+                    expenses.GetAllExpensesCategory(2);
+                    expenses.InitExpensesCategory();
             }
         });
     }
@@ -56,7 +56,7 @@ function BudgetCategory() {
             var action = $(this).data("action");
 
             alertify.confirm(`Are you sure you want to ${action} this budget category?`, function (e) {
-                var isActive = $("#chkBudgetCategoryStatus").prop("checked") === true ? 1 : 0; 
+                var isActive = $("#chkBudgetCategoryStatus").prop("checked") === true ? 1 : 0;
                 var budgetCategory = {
                     BudgetCategoryName: $("#BudgetCategoryName").val().trim(),
                     BudgetCategoryDescription: $("#BudgetCategoryDescription").val().trim(),
@@ -70,7 +70,7 @@ function BudgetCategory() {
                     budgetCategory.BudgetCategoryId = $("#btnSubmitBudgetCategory").data("id");
                     _budgetCategory.ModifyBudgetCategory(budgetCategory);
                 }
-            });
+            }).setHeader(`${CapitalizeWords(action)} budget category`);
         });
 
         $("#modalBudgetCategoryDetails").off().on("hidden.bs.modal", function () {
@@ -180,6 +180,148 @@ function BudgetCategory() {
                 Notif(response.message, "success");
                 _budgetCategory.PopulateBudgetCategory(response.data);
                 $("#modalBudgetCategoryDetails").modal("hide");
+            }
+        });
+    }
+}
+
+function ExpensesCategory() {
+    const _expensesCategory = this;
+
+    this.InitExpensesCategory = function () {
+        $("#btnSubmitExpensesCategory").data("action", "add");
+        $("#btnSubmitExpensesCategory").off().on("click", function () {
+            var form = $("#expensesCategoryForm");
+
+            if (!form.valid()) {
+                return;
+            }
+
+            var action = $(this).data("action");
+
+            alertify.confirm(`Are you sure you want to ${action} this expenses category?`, function (e) {
+                var isActive = $("#chkExpensesCategoryStatus").prop("checked") === true ? 1 : 0;
+                var expensesCategory = {
+                    ExpensesCategoryName: $("#ExpensesCategoryName").val().trim(),
+                    ExpensesCategoryDescription: $("#ExpensesCategoryDescription").val().trim(),
+                    IsActive: isActive
+                };
+
+                if (action == "add") {
+                    _expensesCategory.AddExpensesCategory(expensesCategory);
+                }
+                else {
+                    expensesCategory.ExpensesCategoryId = $("#btnSubmitExpensesCategory").data("id");
+                    _expensesCategory.ModifyExpensesCategory(expensesCategory);
+                }
+            }).setHeader(`${CapitalizeWords(action)} expenses category`);
+        });
+
+        $("#modalExpensesCategoryDetails").off().on("hidden.bs.modal", function () {
+            $("#expensesCategoryTitle").text("New Expenses Category");
+            $("#btnSubmitExpensesCategory").html('<i aria-hidden="true" class="fa fa-plus"></i> Add Expenses Category');
+            $("#btnSubmitExpensesCategory").data("action", "add");
+            $("#btnSubmitExpensesCategory").removeAttr("data-id");
+            $(this).find('.field-validation-error, .field-validation-valid').children().remove();
+        });
+
+        $("#btnExpensesPageToggle").off().on("click", function () {
+            $("#btnClearExpensesCategoryForm").trigger("click");
+        });
+    }
+
+    this.GetAllExpensesCategory = function (status) {
+        $.post("/Category/GetAllExpensesCategories", { status: status }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                _expensesCategory.PopulateExpensesCategory(response.data);
+            }
+        });
+    }
+
+    this.GetExpensesCategoryById = function (expensesCategoryId) {
+        return new Promise((resolve, reject) => {
+            $.post("/Category/GetExpensesCategoryById", { expensesCategoryId: expensesCategoryId }, function (response) {
+                if (response.status === 1) {
+                    resolve(response.data);
+                }
+                else {
+                    reject(response.message);
+                }
+            });
+        });
+    }
+
+    this.PopulateExpensesCategory = function (data) {
+        const table = $("#tblExpensesCategory tbody");
+
+        table.empty();
+
+        if (data != null) {
+            data.forEach(expenses => {
+                const row = `
+                    <tr>
+                        <td>
+                            <span>${expenses.expensesCategoryName}</span><br/>
+                            <div class="nav-container">
+                                <a class="edit-expenses-category active" data-expenses-category-id="${expenses.expensesCategoryId}" href="#"><i aria-hidden="true" class="fa fa-pencil"></i> Edit</a>
+                            </div>
+                        </td>
+                        <td>${expenses.expensesCategoryDescription}</td>
+                        <td><div class="expenses-category-status badge badge-pill ${expenses.isActive == 1 ? "badge-success" : "badge-danger"}">${expenses.isActive == 1 ? "Active" : "Inactive"}</div></td>
+                    </tr>
+                `;
+                table.append(row);
+            });
+
+            $(".edit-expenses-category").on("click", function () {
+                _expensesCategory.GetExpensesCategoryById($(this).data("expenses-category-id")).then((expensesData) => {
+                    var data = expensesData[0];
+
+                    $("#modalExpensesCategoryDetails").modal("show");
+                    $("#expensesCategoryTitle").text("Update Expenses Category");
+                    $("#btnSubmitExpensesCategory").html('<i aria-hidden="true" class="fa fa-pencil"></i> Update Expenses Category');
+                    $("#btnSubmitExpensesCategory").data("action", "update");
+                    $("#btnSubmitExpensesCategory").data("id", $(this).data("expenses-category-id"));
+                    $("#ExpensesCategoryName").val(data.expensesCategoryName);
+                    $("#ExpensesCategoryDescription").val(data.expensesCategoryDescription);
+                    $("#chkExpensesCategoryStatus").bootstrapSwitch("state", data.isActive == 1 ? true : false);
+                }).catch((err) => {
+                    Notif(err, "danger");
+                });
+            });
+        }
+        else {
+            table.append(`<tr class="text-center">
+                        <td colspan="4">No expenses category data found.</td>
+                    </tr>`);
+        }
+    }
+
+    this.AddExpensesCategory = function (expensesCategory) {
+        $.post("/Category/AddExpensesCategory", { expensesCategory: expensesCategory }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                _expensesCategory.PopulateExpensesCategory(response.data);
+                $("#modalExpensesCategoryDetails").modal("hide");
+            }
+        });
+    }
+
+    this.ModifyExpensesCategory = function (expensesCategory) {
+        $.post("/Category/ModifyExpensesCategory", { expensesCategory: expensesCategory }, function (response) {
+            if (response.status === 2) {
+                Notif(response.message, "danger");
+            }
+            else {
+                Notif(response.message, "success");
+                _expensesCategory.PopulateExpensesCategory(response.data);
+                $("#modalExpensesCategoryDetails").modal("hide");
             }
         });
     }

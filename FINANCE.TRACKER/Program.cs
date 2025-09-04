@@ -48,6 +48,7 @@ namespace FINANCE.TRACKER
             builder.Services.AddScoped<IUserRoleService, UserRoleService>();
             builder.Services.AddScoped<IModuleAccessService, ModuleAccessService>();
             builder.Services.AddScoped<IBudgetCategoryService, BudgetCategoryService>();
+            builder.Services.AddScoped<IExpensesCategoryService, ExpensesCategoryService>();
 
 
             var app = builder.Build();
